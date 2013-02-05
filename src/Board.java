@@ -69,7 +69,7 @@ public class Board {
 		}
 		return false;
 	}
-	public boolean isLegalMove(BoardVector currentPos ,int myColor) {
+	public boolean isLegalMove(final BoardVector currentPos ,int myColor) {
 		if( theBoard[currentPos.x][currentPos.y] != 0){
 			return false;
 		}
@@ -82,7 +82,7 @@ public class Board {
 		}
 		return false;
 	}
-	private boolean checkdir(BoardVector inCurrentPos, BoardVector dir ,int color){
+	private boolean checkdir(final BoardVector inCurrentPos, BoardVector dir ,int color){
 		BoardVector currentPos = new BoardVector(inCurrentPos);
 		boolean isOppositeColorInthisDirection = false;
 		boolean isMyColorAfterOppositeColorInThisDirection = false;
