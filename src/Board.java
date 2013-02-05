@@ -6,14 +6,14 @@ public class Board {
 	public static final int WHITE = 3;
 	public Board(){
 		theBoard = new int[8][8];
-		theBoard[4][3] = 3;
-		theBoard[3][4] = 3;
-		theBoard[3][3] = 1;
-		theBoard[4][4] = 1;
+		theBoard[4][3] = WHITE;
+		theBoard[3][4] = WHITE;
+		theBoard[3][3] = BLACK;
+		theBoard[4][4] = BLACK;
 	}
 	public void showBoard() {
-		for(int i = 0; i < theBoard.length; i++) {
-			for(int j = 0; j < theBoard[i].length; j++){
+		for(int i = 0; i < 8; i++) {
+			for(int j = 0; j < 8; j++){
 				switch(theBoard[i][j]) {
 				case EMPTY :
 					System.out.print("-");
@@ -44,10 +44,10 @@ public class Board {
 				case EMPTY :
 					break;
 				case BLACK :
-					whitePoints++;
+					blackPoints++;
 					break;
 				case WHITE :
-					blackPoints++;
+					whitePoints++;
 					break;
 				}
 			}
@@ -55,24 +55,44 @@ public class Board {
 		return whitePoints - blackPoints;
 	}
 	public boolean makeMove(BoardVector desiredPos, int myColor) {
-		if(isLegalMove(desiredPos, myColor)) {
+		int direction = isLegalMove(desiredPos, myColor);
+		if(direction  != -1) {
 			theBoard[desiredPos.x][desiredPos.y] = myColor;
+			BoardVector bv = new BoardVector();
+			for(int i = direction; i < 8; i++) {
+				if( (checkdir(desiredPos, Board.getDirection(i,bv), myColor))) {
+					flipInDirection(desiredPos, Board.getDirection(i,bv), myColor);
+				}
+			}
 			return true;
 		}
 		return false;
 	}
-	public boolean isLegalMove(BoardVector currentPos ,int myColor) {
+	private void flipInDirection(BoardVector startPos, BoardVector direction, int color) {
+		System.out.println(direction.x + " " + direction.y);
+		BoardVector currentPos = new BoardVector(startPos);
+		while(currentPos.add(direction) && Board.isOppositeColor(theBoard[currentPos.x][currentPos.y],color)){
+			theBoard[currentPos.x][currentPos.y] = theBoard[currentPos.x][currentPos.y] ^ 0x2;
+		}
+	}
+	/**
+	 * Returns the direction of a legal move, -1 otherwise
+	 * @param currentPos
+	 * @param myColor
+	 * @return
+	 */
+	public int isLegalMove(BoardVector currentPos ,int myColor) {
 		if( theBoard[currentPos.x][currentPos.y] != 0){
-			return false;
+			return -1;
 		}
 		boolean canIPut = false;
 		BoardVector bv = new BoardVector();
 		for(int i= 0; i < 8; i++){
 			if( (canIPut = canIPut || checkdir(currentPos, Board.getDirection(i,bv), myColor))) {
-				return true;
+				return i;
 			}
 		}
-		return false;
+		return -1;
 	}
 	private boolean checkdir(BoardVector inCurrentPos, BoardVector dir ,int color){
 		BoardVector currentPos = new BoardVector(inCurrentPos);
