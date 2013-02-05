@@ -4,6 +4,14 @@ public class Board {
 	public static final int EMPTY = 0;
 	public static final int BLACK = 1;
 	public static final int WHITE = 3;
+	public Board(Board other){
+		theBoard = new int[8][8];
+		for(int i = 0; i < 8; i++) {
+			for( int j = 0; j < 8; j++){
+				theBoard[i][j] = other.theBoard[i][j];
+			}
+		}
+	}
 	public Board(){
 		theBoard = new int[8][8];
 		theBoard[4][3] = WHITE;
