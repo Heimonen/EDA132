@@ -1,6 +1,6 @@
 
 public class Board {
-	public int[][] theBoard; // 0 == empty, 1= black, 3= white
+	public int[][] theBoard;
 	public static final int EMPTY = 0;
 	public static final int BLACK = 1;
 	public static final int WHITE = 3;
