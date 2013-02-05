@@ -13,14 +13,14 @@ public class Main {
 		pos.y = 4;
 		System.out.println(board.makeMove(pos, Board.BLACK));
 		board.showBoard();
-		pos.x = 5;
-		pos.y = 3;
-		System.out.println(board.makeMove(pos, Board.WHITE));
-		board.showBoard();
-		pos.x = 1;
-		pos.y = 3;
+		pos.x = 4;
+		pos.y = 2;
 		System.out.println(board.makeMove(pos, Board.BLACK));
 		board.showBoard();
+//		pos.x = 1;
+//		pos.y = 3;
+//		System.out.println(board.makeMove(pos, Board.BLACK));
+//		board.showBoard();
 	}
 
 }

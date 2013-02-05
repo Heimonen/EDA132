@@ -32,15 +32,15 @@ public class Board {
 	public void showBoard() {
 		for(int i = 0; i < 8; i++) {
 			for(int j = 0; j < 8; j++){
-				switch(theBoard[i][j]) {
+				switch(theBoard[j][i]) {
 				case EMPTY :
 					System.out.print("-");
 					break;
 				case BLACK : 
-					System.out.print("X");
+					System.out.print("B");
 					break;
 				case WHITE :
-					System.out.print("O");
+					System.out.print("W");
 					break;
 				}
 				if(j == theBoard.length - 1) {
