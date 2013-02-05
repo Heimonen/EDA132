@@ -1,6 +1,14 @@
 
 public class Board {
 	public int[][] theBoard; // 0 == empty, 1= black, 3= white
+	public Board(Board other){
+		theBoard = new int[8][8];
+		for(int i = 0; i < 8; i++) {
+			for( int j = 0; j < 8; j++){
+				theBoard[i][j] = other.theBoard[i][j];
+			}
+		}
+	}
 	public Board(){
 		theBoard = new int[8][8];
 	}
