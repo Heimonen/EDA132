@@ -11,7 +11,7 @@ public class Algorithm {
 			for(int j = 0; j < 8; j++){
 				bv.x = i;
 				bv.y = j;
-				if(currentBoard.isLegalMove(bv, currentColor)){
+				if(currentBoard.isLegalMove(bv, currentColor) != -1){
 					return bv;
 				}
 			}
