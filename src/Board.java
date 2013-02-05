@@ -1,6 +1,9 @@
 
 public class Board {
 	public int[][] theBoard; // 0 == empty, 1= black, 3= white
+	public static final int EMPTY = 0;
+	public static final int BLACK = 1;
+	public static final int WHITE = 3;
 	public Board(Board other){
 		theBoard = new int[8][8];
 		for(int i = 0; i < 8; i++) {
@@ -11,9 +14,63 @@ public class Board {
 	}
 	public Board(){
 		theBoard = new int[8][8];
+		theBoard[4][3] = 3;
+		theBoard[3][4] = 3;
+		theBoard[3][3] = 1;
+		theBoard[4][4] = 1;
 	}
-	private boolean isLegalMove(BoardVector currentPos ,int myColor) {
-		if( theBoard[0][0] != 0){
+	public void showBoard() {
+		for(int i = 0; i < theBoard.length; i++) {
+			for(int j = 0; j < theBoard[i].length; j++){
+				switch(theBoard[i][j]) {
+				case EMPTY :
+					System.out.print("-");
+					break;
+				case BLACK : 
+					System.out.print("X");
+					break;
+				case WHITE :
+					System.out.print("O");
+					break;
+				}
+				if(j == theBoard.length - 1) {
+					System.out.println("|");
+				}
+			}
+		}
+	}
+	/**
+	 * Returns the difference; white - black
+	 * @return
+	 */
+	public int countPoints() {
+		int whitePoints = 0;
+		int blackPoints = 0;
+		for(int i = 0; i < theBoard.length; i++) {
+			for(int j = 0; j < theBoard[i].length; j++){
+				switch(theBoard[i][j]) {
+				case EMPTY :
+					break;
+				case BLACK :
+					whitePoints++;
+					break;
+				case WHITE :
+					blackPoints++;
+					break;
+				}
+			}
+		}
+		return whitePoints - blackPoints;
+	}
+	public boolean makeMove(BoardVector desiredPos, int myColor) {
+		if(isLegalMove(desiredPos, myColor)) {
+			theBoard[desiredPos.x][desiredPos.y] = myColor;
+			return true;
+		}
+		return false;
+	}
+	public boolean isLegalMove(BoardVector currentPos ,int myColor) {
+		if( theBoard[currentPos.x][currentPos.y] != 0){
 			return false;
 		}
 		boolean canIPut = false;
@@ -25,7 +82,8 @@ public class Board {
 		}
 		return false;
 	}
-	private boolean checkdir(BoardVector currentPos, BoardVector dir ,int color){
+	private boolean checkdir(BoardVector inCurrentPos, BoardVector dir ,int color){
+		BoardVector currentPos = new BoardVector(inCurrentPos);
 		boolean isOppositeColorInthisDirection = false;
 		boolean isMyColorAfterOppositeColorInThisDirection = false;
 		if(currentPos.add(dir) && Board.isOppositeColor(theBoard[currentPos.x][currentPos.y],color)){
@@ -80,9 +138,14 @@ public class Board {
 		}
 		return d;
 	}
-	static private class BoardVector {
+	static public class BoardVector {
 		public int x;
 		public int y; 
+		public BoardVector(BoardVector other) {
+			this.x = other.x;
+			this.y = other.y;
+		}
+		public BoardVector() {}
 		public boolean add(BoardVector other){
 			this.x += other.x;
 			this.y += other.y;
