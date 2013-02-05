@@ -4,6 +4,16 @@ public class Board {
 	public static final int EMPTY = 0;
 	public static final int BLACK = 1;
 	public static final int WHITE = 3;
+	
+	public static final int UP = 0;
+	public static final int RIGHT_UP = 1;
+	public static final int RIGHT = 2;
+	public static final int RIGHT_DOWN = 3;
+	public static final int DOWN = 4;
+	public static final int LEFT_DOWN = 5;
+	public static final int LEFT = 6;
+	public static final int LEFT_UP = 7;
+	
 	public Board(Board other){
 		theBoard = new int[8][8];
 		for(int i = 0; i < 8; i++) {
@@ -124,35 +134,35 @@ public class Board {
 	}
 	public static BoardVector getDirection(int dir, BoardVector d){
 		switch(dir){
-		case 0:
+		case UP:
 			d.x = 0;
 			d.y = -1;
 			break;
-		case 1:
+		case RIGHT_UP:
 			d.x = 1;
 			d.y = -1;
 			break;
-		case 2:
+		case RIGHT:
 			d.x = 1;
 			d.y = 0;
 			break;
-		case 3:
+		case RIGHT_DOWN:
 			d.x = 1;
 			d.y = 1;
 			break;
-		case 4:
+		case DOWN:
 			d.x = 0;
 			d.y = 1;
 			break;
-		case 5:
+		case LEFT_DOWN:
 			d.x = -1;
 			d.y = 1;
 			break;
-		case 6:
+		case LEFT:
 			d.x = -1;
 			d.y = 0;
 			break;
-		case 7:
+		case LEFT_UP:
 			d.x = -1;
 			d.y = -1;
 			break;
