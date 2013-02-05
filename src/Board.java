@@ -56,8 +56,8 @@ public class Board {
 	public int countPoints() {
 		int whitePoints = 0;
 		int blackPoints = 0;
-		for(int i = 0; i < theBoard.length; i++) {
-			for(int j = 0; j < theBoard[i].length; j++){
+		for(int i = 0; i < 8; i++) {
+			for(int j = 0; j < 8; j++){
 				switch(theBoard[i][j]) {
 				case EMPTY :
 					break;
