@@ -172,17 +172,19 @@ public class Board {
 	static public class BoardVector {
 		public int x;
 		public int y; 
-		public BoardVector(BoardVector other) {
+		public BoardVector(BoardVector other){
 			this.x = other.x;
 			this.y = other.y;
 		}
-		public BoardVector() {}
+		public BoardVector(){
+			this.y = -1;
+		}
 		public boolean add(BoardVector other){
 			this.x += other.x;
 			this.y += other.y;
 			return isInBounds();
 		}
-		public boolean isInBounds() {
+		public boolean isInBounds(){
 			return isInBounds(x) && isInBounds(y);
 		}
 		static boolean isInBounds(int c){
