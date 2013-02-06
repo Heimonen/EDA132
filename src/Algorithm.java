@@ -2,8 +2,11 @@ import java.util.List;
 
 
 public class Algorithm {
+	private static long startTime;
+	
 	
 	public static Board.BoardVector alphaBetaSearch(Board currentBoard, int color){
+		startTime = System.currentTimeMillis();
 		int v = maxValue(currentBoard, Integer.MIN_VALUE,Integer.MAX_VALUE, color);
 		System.out.println(v);
 		return null;
@@ -69,6 +72,9 @@ public class Algorithm {
 		
 	}
 	private static Board.BoardVector getNextMove(Board currentBoard, int currentColor, Board.BoardVector bv){
+		if(System.currentTimeMillis() - startTime > Main.runTime) {
+			return null;
+		}
 		while( bv.x < 8){
 			while(bv.y < 7){
 				bv.y++;

@@ -28,6 +28,15 @@ public class Board {
 		theBoard[3][4] = WHITE;
 		theBoard[3][3] = BLACK;
 		theBoard[4][4] = BLACK;
+		BoardVector vector = new BoardVector();
+		vector.x = 4;
+		vector.y = 2;
+		makeMove(vector, BLACK);
+		vector.x = 5;
+		vector.y = 4;
+		makeMove(vector, WHITE);
+//		makeMove(vector, BLACK);
+//		makeMove(vector, WHITE);
 	}
 	public void showBoard() {
 		for(int i = 0; i < 8; i++) {
@@ -72,6 +81,8 @@ public class Board {
 		}
 		return whitePoints - blackPoints;
 	}
+	
+	
 	public boolean makeMove(BoardVector desiredPos, int myColor) {
 		int direction = isLegalMove(desiredPos, myColor);
 		if(direction  != -1) {
@@ -88,6 +99,7 @@ public class Board {
 	}
 	
 	private void flipInDirection(BoardVector startPos, BoardVector direction, int color) {
+		System.out.println(direction.x + " " + direction.y);
 		BoardVector currentPos = new BoardVector(startPos);
 		while(currentPos.add(direction) && Board.isOppositeColor(theBoard[currentPos.x][currentPos.y],color)){
 			theBoard[currentPos.x][currentPos.y] = theBoard[currentPos.x][currentPos.y] ^ 0x2;
