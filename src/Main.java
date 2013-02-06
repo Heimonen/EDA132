@@ -1,7 +1,7 @@
 
 public class Main {
-	public static long runTime = 20000;
-	
+	public static long runTime = 10000;
+	public static int aiColor = Board.BLACK;
 	
 	public static void main(String[] args) {
 		if(args.length > 0 && args[0] != null) {
@@ -13,6 +13,6 @@ public class Main {
 			}
 		}
 		Board theBoard = new Board();
-		Algorithm.alphaBetaSearch(theBoard, Board.BLACK);
+		Algorithm.alphaBetaSearch(theBoard, aiColor);
 	}
 }

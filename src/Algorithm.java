@@ -8,13 +8,14 @@ public class Algorithm {
 	public static Board.BoardVector alphaBetaSearch(Board currentBoard, int color){
 		startTime = System.currentTimeMillis();
 		int v = maxValue(currentBoard, Integer.MIN_VALUE,Integer.MAX_VALUE, color);
+		
 		System.out.println(v);
 		return null;
 	}
 	private static int maxValue(Board currentBoard, int alpha, int beta, int color) {
 		Board.BoardVector action = new Board.BoardVector();
 		if(terminalTest(currentBoard,action,color)){
-			return currentBoard.countPoints();
+			return currentBoard.countPoints(color);
 		}
 		int v = Integer.MIN_VALUE;
 		do {
@@ -29,7 +30,7 @@ public class Algorithm {
 	private static int minValue(Board currentBoard, int alpha, int beta, int color) {
 		Board.BoardVector action = new Board.BoardVector();
 		if(terminalTest(currentBoard,action,color)){
-			return currentBoard.countPoints();
+			return currentBoard.countPoints(color);
 		}
 		
 		int v = Integer.MAX_VALUE;
@@ -60,7 +61,7 @@ public class Algorithm {
 		Board.BoardVector bv = new Board.BoardVector();
 		int min = Integer.MAX_VALUE;
 		if(getNextMove(currentBoard, currentColor, bv) == null) {
-			return currentBoard.countPoints();
+			return currentBoard.countPoints(Board.BLACK);//HARD CODED TO BLACK
 		}
 		int nextColor = currentColor ^ 0x2;
 		do{

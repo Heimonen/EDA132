@@ -31,10 +31,10 @@ public class Board {
 		BoardVector vector = new BoardVector();
 		vector.x = 4;
 		vector.y = 2;
-		makeMove(vector, BLACK);
+//		makeMove(vector, BLACK);
 		vector.x = 5;
 		vector.y = 4;
-		makeMove(vector, WHITE);
+//		makeMove(vector, WHITE);
 //		makeMove(vector, BLACK);
 //		makeMove(vector, WHITE);
 	}
@@ -62,7 +62,7 @@ public class Board {
 	 * Returns the difference; white - black
 	 * @return
 	 */
-	public int countPoints() {
+	public int countPoints(int color) {
 		int whitePoints = 0;
 		int blackPoints = 0;
 		for(int i = 0; i < 8; i++) {
@@ -79,7 +79,14 @@ public class Board {
 				}
 			}
 		}
-		return whitePoints - blackPoints;
+		switch (Main.aiColor) {
+		case Board.BLACK :
+			return blackPoints - whitePoints;
+		case Board.WHITE :
+			return whitePoints - blackPoints;
+		default:
+			return 0;
+		}
 	}
 	
 	
@@ -99,7 +106,7 @@ public class Board {
 	}
 	
 	private void flipInDirection(BoardVector startPos, BoardVector direction, int color) {
-		System.out.println(direction.x + " " + direction.y);
+//		System.out.println(direction.x + " " + direction.y);
 		BoardVector currentPos = new BoardVector(startPos);
 		while(currentPos.add(direction) && Board.isOppositeColor(theBoard[currentPos.x][currentPos.y],color)){
 			theBoard[currentPos.x][currentPos.y] = theBoard[currentPos.x][currentPos.y] ^ 0x2;
