@@ -88,7 +88,6 @@ public class Board {
 	}
 	
 	private void flipInDirection(BoardVector startPos, BoardVector direction, int color) {
-		System.out.println(direction.x + " " + direction.y);
 		BoardVector currentPos = new BoardVector(startPos);
 		while(currentPos.add(direction) && Board.isOppositeColor(theBoard[currentPos.x][currentPos.y],color)){
 			theBoard[currentPos.x][currentPos.y] = theBoard[currentPos.x][currentPos.y] ^ 0x2;
