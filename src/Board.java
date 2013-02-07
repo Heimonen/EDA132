@@ -38,25 +38,30 @@ public class Board {
 //		makeMove(vector, BLACK);
 //		makeMove(vector, WHITE);
 	}
-	public void showBoard() {
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("  abcdefgh\n");
 		for(int i = 0; i < 8; i++) {
+			sb.append(i+1);
+			sb.append('|');
 			for(int j = 0; j < 8; j++){
 				switch(theBoard[j][i]) {
 				case EMPTY :
-					System.out.print("-");
+					sb.append('-');
 					break;
 				case BLACK : 
-					System.out.print("B");
+					sb.append('B');
 					break;
 				case WHITE :
-					System.out.print("W");
+					sb.append('W');
 					break;
 				}
-				if(j == theBoard.length - 1) {
-					System.out.println("|");
+				if(j ==  7) {
+					sb.append("|\n");
 				}
 			}
 		}
+		return sb.toString();
 	}
 	/**
 	 * Returns the difference; white - black

@@ -2,6 +2,7 @@ import java.util.List;
 
 public class Algorithm {
 	private static long startTime;
+	private static int numMovesTried;
 	
 	
 	public static Board.BoardVector alphaBetaSearch(Board currentBoard, int color){
@@ -89,13 +90,18 @@ public class Algorithm {
 		
 	}
 	private static Board.BoardVector getNextMove(Board currentBoard, int currentColor, Board.BoardVector bv){
-		if(System.currentTimeMillis() - startTime > Main.runTime) {
-			return null;
+		if(numMovesTried % 1000000 == 0){
+			long secsConsumed = (System.currentTimeMillis() - startTime) / 1000; 
+			System.out.println(String.format("consumed time: %d seconds; numMovedTried: %d", secsConsumed,numMovesTried));
+			if( secsConsumed > Main.runTimeSeconds) {
+				return null;
+			}
 		}
 		while( bv.x < 8){
 			while(bv.y < 7){
 				bv.y++;
 				if(currentBoard.isLegalMove(bv, currentColor) != -1){
+					numMovesTried++;
 					return bv;
 				}
 			}
