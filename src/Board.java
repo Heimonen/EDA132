@@ -63,6 +63,7 @@ public class Board {
 	public int countPoints() {
 		int whitePoints = 0;
 		int blackPoints = 0;
+		int color = whoesTurn;
 		for(int i = 0; i < 8; i++) {
 			for(int j = 0; j < 8; j++){
 				switch(theBoard[i][j]) {
@@ -123,6 +124,9 @@ public class Board {
 	 * @return
 	 */
 	public int isLegalMove(final BoardVector currentPos) {
+		if(!(currentPos.x <= 7 && currentPos.x >= 0 && currentPos.y <= 7 && currentPos.y >= 0)){
+			return -1;
+		}
 		if( theBoard[currentPos.x][currentPos.y] != 0){
 			return -1;
 		}

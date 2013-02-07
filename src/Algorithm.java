@@ -2,7 +2,7 @@ import java.util.List;
 
 public class Algorithm {
 	private static long startTime;
-	private static int numMovesTried;
+	public static int numMovesTried;
 	
 	
 	public static Board.BoardVector alphaBetaSearch(Board currentBoard){
