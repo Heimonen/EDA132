@@ -28,15 +28,6 @@ public class Board {
 		theBoard[3][4] = WHITE;
 		theBoard[3][3] = BLACK;
 		theBoard[4][4] = BLACK;
-		BoardVector vector = new BoardVector();
-		vector.x = 4;
-		vector.y = 2;
-//		makeMove(vector, BLACK);
-		vector.x = 5;
-		vector.y = 4;
-//		makeMove(vector, WHITE);
-//		makeMove(vector, BLACK);
-//		makeMove(vector, WHITE);
 	}
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
