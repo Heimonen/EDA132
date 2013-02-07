@@ -4,7 +4,7 @@ import java.io.InputStreamReader;
 
 
 public class Main {
-	public static long runTimePerMoveInSeconds = 50;
+	public static long runTimePerMoveInSeconds = 1;
 	public static int aiColor = Board.BLACK;
 	
 	public static void main(String[] args) throws IOException {
@@ -15,6 +15,9 @@ public class Main {
 		while( (input = in.readLine()) != null && !input.equals("")){
 			if(handleInput(input, theBoard)){
 				System.out.println(theBoard);
+				if(Algorithm.numMovesTried == 0){
+					Main.aiColor = theBoard.whoesTurn;
+				}
 				Board.BoardVector aiMove =Algorithm.alphaBetaSearch(theBoard); 
 				System.out.println(aiMove);
 				theBoard.makeMove(aiMove);
