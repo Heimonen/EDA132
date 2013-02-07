@@ -35,8 +35,7 @@ public class Main {
 			Board.BoardVector move =new Board.BoardVector();
 			move.x = input.charAt(0) - 'a';
 			move.y = input.charAt(1) - '1';
-			currentBoard.makeMove(move);
-			return true;
+			return (move.x >= 0 && move.x <= 7 && move.y >= 0 && move.y <= 7) ? currentBoard.makeMove(move):false;
 		}
 		return false;
 	}
