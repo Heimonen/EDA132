@@ -1,5 +1,6 @@
 
 public class Board {
+	public int whoesTurn = Board.BLACK; 
 	public int[][] theBoard;
 	public static final int EMPTY = 0;
 	public static final int BLACK = 1;
@@ -21,6 +22,7 @@ public class Board {
 				theBoard[i][j] = other.theBoard[i][j];
 			}
 		}
+		this.whoesTurn = other.whoesTurn;
 	}
 	public Board(){
 		theBoard = new int[8][8];
@@ -28,15 +30,6 @@ public class Board {
 		theBoard[3][4] = WHITE;
 		theBoard[3][3] = BLACK;
 		theBoard[4][4] = BLACK;
-		BoardVector vector = new BoardVector();
-		vector.x = 4;
-		vector.y = 2;
-//		makeMove(vector, BLACK);
-		vector.x = 5;
-		vector.y = 4;
-//		makeMove(vector, WHITE);
-//		makeMove(vector, BLACK);
-//		makeMove(vector, WHITE);
 	}
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
@@ -67,7 +60,7 @@ public class Board {
 	 * Returns the difference; white - black
 	 * @return
 	 */
-	public int countPoints(int color) {
+	public int countPoints() {
 		int whitePoints = 0;
 		int blackPoints = 0;
 		for(int i = 0; i < 8; i++) {
@@ -94,9 +87,15 @@ public class Board {
 		}
 	}
 	
-	
-	public boolean makeMove(BoardVector desiredPos, int myColor) {
-		int direction = isLegalMove(desiredPos, myColor);
+	public boolean makeMove(BoardVector action){
+		if(makeMove(action,whoesTurn)){
+			this.whoesTurn ^= 0x2;
+			return true;
+		}
+		return false;
+	}
+	private boolean makeMove(BoardVector desiredPos, int myColor) {
+		int direction = isLegalMove(desiredPos);
 		if(direction  != -1) {
 			theBoard[desiredPos.x][desiredPos.y] = myColor;
 			BoardVector bv = new BoardVector();
@@ -123,14 +122,14 @@ public class Board {
 	 * @param myColor
 	 * @return
 	 */
-	public int isLegalMove(final BoardVector currentPos ,int myColor) {
+	public int isLegalMove(final BoardVector currentPos) {
 		if( theBoard[currentPos.x][currentPos.y] != 0){
 			return -1;
 		}
 		boolean canIPut = false;
 		BoardVector bv = new BoardVector();
 		for(int i= 0; i < 8; i++){
-			if( (canIPut = canIPut || checkdir(currentPos, Board.getDirection(i,bv), myColor))) {
+			if( (canIPut = canIPut || checkdir(currentPos, Board.getDirection(i,bv), whoesTurn))) {
 				return i;
 			}
 		}
