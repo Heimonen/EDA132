@@ -194,19 +194,32 @@ public class Board {
 			this.x = other.x;
 			this.y = other.y;
 		}
+		
 		public BoardVector(){
 			this.y = -1;
 		}
+		
+		public void init(BoardVector other){
+			this.x=other.x;
+			this.y = other.y;
+		}
+		
 		public boolean add(BoardVector other){
 			this.x += other.x;
 			this.y += other.y;
 			return isInBounds();
 		}
+		
 		public boolean isInBounds(){
 			return isInBounds(x) && isInBounds(y);
 		}
+		
 		static boolean isInBounds(int c){
 			return c < 8 && c >= 0;
+		}
+		
+		public String toString(){
+			return String.format("%d%c", x+1, 'a' +y);
 		}
 	}
 }

@@ -1,16 +1,32 @@
 import java.util.List;
 
-
 public class Algorithm {
 	private static long startTime;
 	
 	
 	public static Board.BoardVector alphaBetaSearch(Board currentBoard, int color){
 		startTime = System.currentTimeMillis();
-		int v = maxValue(currentBoard, Integer.MIN_VALUE,Integer.MAX_VALUE, color);
+		Board.BoardVector bestMove= initMaxValue(currentBoard, Integer.MIN_VALUE,Integer.MAX_VALUE, color);
 		
-		System.out.println(v);
-		return null;
+		System.out.println(bestMove);
+		return bestMove;
+	}
+	private static Board.BoardVector initMaxValue(Board currentBoard, int alpha, int beta, int color) {
+		Board.BoardVector action = new Board.BoardVector();
+		if(terminalTest(currentBoard,action,color)){
+			return null;
+		}
+		int v = Integer.MIN_VALUE;
+		Board.BoardVector bestMove = new Board.BoardVector(action);
+		do {
+			int minTest = minValue(result(currentBoard,action,color), alpha, beta, color ^ 0x2);
+			if(minTest > v){
+				v = minTest;
+				bestMove.init(action);
+			}
+			alpha = Math.max(alpha, v);			
+		}while ( getNextMove(currentBoard, color, action) != null);
+		return bestMove;
 	}
 	private static int maxValue(Board currentBoard, int alpha, int beta, int color) {
 		Board.BoardVector action = new Board.BoardVector();
