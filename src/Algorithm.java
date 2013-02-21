@@ -1,5 +1,3 @@
-import java.util.List;
-
 public class Algorithm {
 	private static long startTime;
 	public static int numMovesTried;
