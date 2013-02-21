@@ -26,10 +26,10 @@ public class Board {
 	}
 	public Board(){
 		theBoard = new int[8][8];
-		theBoard[4][3] = WHITE;
-		theBoard[3][4] = WHITE;
-		theBoard[3][3] = BLACK;
-		theBoard[4][4] = BLACK;
+		theBoard[4][3] = BLACK;
+		theBoard[3][4] = BLACK;
+		theBoard[3][3] = WHITE;
+		theBoard[4][4] = WHITE;
 	}
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
@@ -227,7 +227,7 @@ public class Board {
 		}
 		
 		public String toString(){
-			return String.format("%d%c", x+1, 'a' +y);
+			return String.format("%c%d",'a' + x, 1 +y);
 		}
 	}
 }
