@@ -4,7 +4,7 @@ import java.io.InputStreamReader;
 
 
 public class Main {
-	public static long runTimePerMoveInSeconds = 1;
+	public static long runTimePerMoveInSeconds = 10;
 	public static int aiColor = Board.BLACK;
 	
 	public static void main(String[] args) throws IOException {
