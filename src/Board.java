@@ -64,16 +64,19 @@ public class Board {
 		int whitePoints = 0;
 		int blackPoints = 0;
 		int color = whoesTurn;
+		int increment = 0;
 		for(int i = 0; i < 8; i++) {
 			for(int j = 0; j < 8; j++){
+				increment = i != 0 || j != 0 || i != 7 || j !=7 ? 1 : 5;
 				switch(theBoard[i][j]) {
 				case EMPTY :
+					
 					break;
 				case BLACK :
-					blackPoints++;
+					blackPoints += increment;
 					break;
 				case WHITE :
-					whitePoints++;
+					whitePoints += increment;
 					break;
 				}
 			}
