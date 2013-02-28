@@ -17,10 +17,9 @@ import org.openrdf.model.Value;
  */
 public class Main {
 	
-	private static final String KNOW_ROB_SESAME_SERVER = "http://asimov.ludat.lth.se/openrdf-sesame/";
-	private static final String OPEN_RDF_SESAME_SERVER = "http://asimov.ludat.lth.se/openrdf-sesame/repositories/Assignment2";
+	private static final String SESAME_SERVER = "http://asimov.ludat.lth.se/openrdf-sesame/";
 	private static final String KNOW_ROB_REPOSITORY_ID = "KnowRob";
-	private static final String OPEN_RDF_REPOSITORY_ID = "openrdf-sesame";
+	private static final String ASSIGNMENT_2_REPOSITORY_ID = "Assignment2";
 	
 	private static String drinkingGlassStored = 
 		"PREFIX rdfs:<http://www.w3.org/2000/01/rdf-schema#> " +
@@ -43,8 +42,8 @@ public class Main {
 
 	
 	public static void main(String[] args) {
-		SesameRepository knowRobRepository = new SesameRepository(KNOW_ROB_SESAME_SERVER, KNOW_ROB_REPOSITORY_ID);
-		SesameRepository openRdfRepository = new SesameRepository(OPEN_RDF_SESAME_SERVER, OPEN_RDF_REPOSITORY_ID);
+		SesameRepository knowRobRepository = new SesameRepository(SESAME_SERVER, KNOW_ROB_REPOSITORY_ID);
+		SesameRepository openRdfRepository = new SesameRepository(SESAME_SERVER, ASSIGNMENT_2_REPOSITORY_ID);
 		
 		System.out.println("KnowRob repository:" + "\n");
 		System.out.println("1. Where may a drinking glass be stored? (Explore the concept knowrob:DrinkingGlass by hand to find out the answer and to form your SPARQL query.)");
@@ -54,6 +53,7 @@ public class Main {
 			System.out.println("Answer: " + value.get("out") + "\n");
 		}
 		System.out.println("2. What are the \"putting\" actions a robot using KnowRob may reason about and what are their subactions? (Explore knowrob:Movement-TranslationEvent and knowrob:subAction.)");
+		System.out.println("Answer: ");
 		Ass2 a = new Ass2(knowRobRepository);
 		//uses recursive search for subclasses with Putting in the name
 		HashSet<String> puttingActions = a.findPuttingActions();
@@ -65,7 +65,6 @@ public class Main {
 		}
 		
 		
-		System.out.println("Answer: ");
 		
 		
 		System.out.println("openrdf-sesame: ");
