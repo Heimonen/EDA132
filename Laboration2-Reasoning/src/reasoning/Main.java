@@ -79,8 +79,13 @@ public class Main {
 		}
 		
 		System.out.println("2. What are the maximum forces (rosetta:MaxForce) exerted by the available vacuum grippers?");
-		
+		for(String s: a.getMaximumForcesExcertedByVaccumGrippers()) {
+			System.out.println(s);
+		}
 		System.out.println("3. Which devices may perform the skill rosetta:LinearMove? Note that concept equivalence is involved here.");
+		for(String s: a.getDevicesWithLinearMoveSkill()) {
+			System.out.println(s);
+		}
 	}
 	
 }

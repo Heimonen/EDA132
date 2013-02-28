@@ -54,6 +54,23 @@ public class Ass2 {
 			" FILTER (?p > [lowerPayloadBound])  "+
 			" ?e rosetta:isPropertyOf ?d "+
 			"} ";
+		
+		private static String maxForceQuery = rosettaPrefixes +" Select ?v "+ 
+			"Where { "+
+			" ?d rosetta:hasSkill rosetta:VacuumGrip . "+ 
+			" ?d rosetta:hasProperty ?p .  "+
+			" ?p rdf:type rosetta:MaxForce .  "+
+			" ?p rosetta:value ?v . "+
+			"}";
+		
+		private static final String devsWithLinearMove = rosettaPrefixes +
+			"Select DISTINCT ?d "+
+			"Where { "+
+			" ?other owl:equivalentClass rosetta:LinearMove . "+
+			" ?skill rdf:type ?other . "+
+			" ?skill rosetta:isSkillOf ?d . "+
+			"} ";
+		
 	HashSet<String> puttingActions;
 	SesameRepository knowRobRepo;
 	SesameRepository ass2Repo;
@@ -83,6 +100,27 @@ public class Ass2 {
 		ArrayList<HashMap<String, Value> > subClasses = knowRobRepo.selectSPARQL(puttingQuery1);
 		recursiveSearch(subClasses);
 		return puttingActions;
+	}
+	
+	public ArrayList<String> getMaximumForcesExcertedByVaccumGrippers() {
+		ArrayList<String> rtn = new ArrayList<String>();
+		ArrayList<HashMap<String, Value> > devices = ass2Repo.selectSPARQL(maxForceQuery);
+		if( devices != null) {
+			for( HashMap<String, Value> row : devices) {
+				rtn.add(row.get("v").stringValue());
+			}
+		}
+		return rtn;
+	}
+	public ArrayList<String> getDevicesWithLinearMoveSkill() {
+		ArrayList<String> rtn = new ArrayList<String>();
+		ArrayList<HashMap<String, Value> > devices = ass2Repo.selectSPARQL(devsWithLinearMove);
+		if( devices != null) {
+			for( HashMap<String, Value> row : devices) {
+				rtn.add(row.get("d").stringValue());
+			}
+		}
+		return rtn;
 	}
 	
 	private void recursiveSearch(ArrayList<HashMap<String, Value> > in) {
