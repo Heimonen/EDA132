@@ -31,12 +31,51 @@ public class Ass2 {
 			"?t owl:onProperty knowrob:subAction . "+
 			" ?t owl:someValuesFrom ?e . "+
 			"} "; 
+		
+		private static final String rosettaPrefixes = "PREFIX dc:<http://purl.org/dc/elements/1.1/> "+
+			"PREFIX ObjectList:<http://www.daml.org/services/owl-s/1.2/generic/ObjectList.owl#> "+
+			"PREFIX qudt:<http://data.nasa.gov/qudt/owl/qudt#> "+
+			"PREFIX drsonto040520:<http://cs-www.cs.yale.edu/homes/dvm/daml/drsonto040520.owl#> "+
+			"PREFIX unit:<http://data.nasa.gov/qudt/owl/unit#> "+
+			"PREFIX rdfs:<http://www.w3.org/2000/01/rdf-schema#> "+
+			"PREFIX swrl:<http://www.w3.org/2003/11/swrl#> "+
+			"PREFIX owl2xml:<http://www.w3.org/2006/12/owl2-xml#> "+
+			"PREFIX Process:<http://www.daml.org/services/owl-s/1.2/Process.owl#> "+
+			"PREFIX xsd:<http://www.w3.org/2001/XMLSchema#> "+
+			"PREFIX owl:<http://www.w3.org/2002/07/owl#> "+
+			"PREFIX rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#> "+
+			"PREFIX Expression:<http://www.daml.org/services/owl-s/1.2/generic/Expression.owl#> "+
+			"PREFIX rosetta:<http://kif.cs.lth.se/ontologies/rosetta.owl#> ";
+		
+		private static String payloadQueryTemplate = rosettaPrefixes + " Select ?e ?p ?d "+
+			"WHERE { "+
+			" ?e rdf:type rosetta:Payload . "+
+			" ?e rosetta:value ?p . "+
+			" FILTER (?p > [lowerPayloadBound])  "+
+			" ?e rosetta:isPropertyOf ?d "+
+			"} ";
 	HashSet<String> puttingActions;
 	SesameRepository knowRobRepo;
-	Ass2(SesameRepository knowRobRepo) {
+	SesameRepository ass2Repo;
+	
+	Ass2(SesameRepository knowRobRepo, SesameRepository ass2Repo) {
 		puttingActions = new HashSet<String>();
 		this.knowRobRepo = knowRobRepo;
+		this.ass2Repo = ass2Repo;
 	}
+	
+	HashSet<String> getThingsWithPayload(float lowerBound) {
+		HashSet<String> rtn = new HashSet<String>();
+		ArrayList<HashMap<String, Value> > devices = ass2Repo.selectSPARQL(payloadQueryTemplate.replace("[lowerPayloadBound]", Float.toString(lowerBound)));
+		if( devices != null) {
+			for( HashMap<String, Value> row : devices) {
+				rtn.add(row.get("d").toString());
+			}
+		}
+		return rtn;
+		
+	}
+	
 	/**
 	 * @param args
 	 */

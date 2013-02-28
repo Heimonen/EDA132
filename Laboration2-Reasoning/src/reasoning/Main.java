@@ -54,7 +54,7 @@ public class Main {
 		}
 		System.out.println("2. What are the \"putting\" actions a robot using KnowRob may reason about and what are their subactions? (Explore knowrob:Movement-TranslationEvent and knowrob:subAction.)");
 		System.out.println("Answer: ");
-		Ass2 a = new Ass2(knowRobRepository);
+		Ass2 a = new Ass2(knowRobRepository,openRdfRepository);
 		//uses recursive search for subclasses with Putting in the name
 		HashSet<String> puttingActions = a.findPuttingActions();
 		for( String puttingAction: puttingActions) {
@@ -69,7 +69,14 @@ public class Main {
 		
 		System.out.println("openrdf-sesame: ");
 		
-		System.out.println("1. Which robots (rosetta:Device) have payload larger than 3kg? Larger than 12kg?");
+		System.out.println("1. Which robots (rosetta:Device) have payload larger than 3kg?");
+		for(String s: a.getThingsWithPayload(3)) {
+			System.out.println(s);
+		}
+		System.out.println("Larger than 12kg?");
+		for(String s: a.getThingsWithPayload(12)) {
+			System.out.println(s);
+		}
 		
 		System.out.println("2. What are the maximum forces (rosetta:MaxForce) exerted by the available vacuum grippers?");
 		
