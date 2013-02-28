@@ -2,6 +2,8 @@ package reasoning;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+
 import org.openrdf.model.Value;
 
 /**
@@ -38,6 +40,7 @@ public class Main {
 		    "?node owl:onProperty ?stored . " +
 		    "?node owl:someValuesFrom ?out " +
 		"}";
+
 	
 	public static void main(String[] args) {
 		SesameRepository knowRobRepository = new SesameRepository(KNOW_ROB_SESAME_SERVER, KNOW_ROB_REPOSITORY_ID);
@@ -51,6 +54,17 @@ public class Main {
 			System.out.println("Answer: " + value.get("out") + "\n");
 		}
 		System.out.println("2. What are the \"putting\" actions a robot using KnowRob may reason about and what are their subactions? (Explore knowrob:Movement-TranslationEvent and knowrob:subAction.)");
+		Ass2 a = new Ass2(knowRobRepository);
+		//uses recursive search for subclasses with Putting in the name
+		HashSet<String> puttingActions = a.findPuttingActions();
+		for( String puttingAction: puttingActions) {
+			System.out.println(puttingAction);
+			for(String subAction : a.getSubActionForAction(puttingAction)) {
+				System.out.println("\t" + subAction);
+			}
+		}
+		
+		
 		System.out.println("Answer: ");
 		
 		
@@ -62,4 +76,5 @@ public class Main {
 		
 		System.out.println("3. Which devices may perform the skill rosetta:LinearMove? Note that concept equivalence is involved here.");
 	}
+	
 }
