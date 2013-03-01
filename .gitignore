@@ -46,4 +46,6 @@ local.properties
 *.war
 *.ear
 
+###Sublime###
 
+*.sublime-workspace
