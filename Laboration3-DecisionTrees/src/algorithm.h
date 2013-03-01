@@ -1,0 +1,5 @@
+class Algorithm {
+public:
+	
+private:
+};
