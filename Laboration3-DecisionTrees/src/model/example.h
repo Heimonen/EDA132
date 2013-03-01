@@ -1,7 +1,9 @@
 #include <vector>
 using std::vector;
+#include <string> // for size_t
 
-class Example : private vector {
+
+class Example : private vector<unsigned int> {
 using vector::begin;
 using vector::end;
 using vector::operator[];

@@ -36,7 +36,7 @@ all: $(ALLTARGETS)
 
 
 # Linking:
-lab3: lab3.o arffparser.o
+lab3: lab3.o arffparser.o model/example.o
 
 arffparser: arffparser.o model/example.o
 
