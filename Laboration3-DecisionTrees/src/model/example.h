@@ -1,10 +1,12 @@
 #include <vector>
 using std::vector;
 
-class Example {
-	typedef vector<unsigned int> Attributes;
+class Example : private vector {
+using vector::begin;
+using vector::end;
+using vector::operator[];
+using vector::push_back;
+
 public:
-
-private:
-
+	Example(size_t numElements) : vector(numElements) {}
 };
