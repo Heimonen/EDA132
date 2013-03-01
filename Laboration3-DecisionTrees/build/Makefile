@@ -8,7 +8,7 @@ CXXFLAGS  = -pipe -Wall -W -ansi -pedantic-errors -std=c++11
 CXXFLAGS += -Wmissing-braces -Wparentheses -Wold-style-cast
 CC        = $(CXX)
 
-ALLTARGETS = lab3 arffparser model/example
+ALLTARGETS = lab3
 
 # insert this line somewhere at the top of the file
 DEBUG = false
@@ -36,11 +36,7 @@ all: $(ALLTARGETS)
 
 
 # Linking:
-lab3: lab3.o arffparser.o model/example.o
-
-arffparser: arffparser.o model/example.o
-
-model/example: model/example.o
+lab3: lab3.o arffparser.o
 
 # Dependencies, the implicit rule .cc => .o is used
 include $(sources:.cc=.dd)

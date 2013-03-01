@@ -1,9 +1,12 @@
 #include <algorithm>
+using std::unary_function; 
+#include <cstdlib> // rand;
 
-class Algorithm {
+#include "model/example.h"
 
 struct Tree;
-struct Attributes
+struct Attributes;
+struct Attribute;
 
 template<typename IteratorT, typename HeuristicFunctorT>
 IteratorT argmax(IteratorT it, const IteratorT & end, const HeuristicFunctorT & functor) {
@@ -19,8 +22,16 @@ for(; it != end; ++it) {
     }
 }
 
+struct Importance : public binary_function<Example,int> {
+  int operator() (const Example) {return (rand()%10);}
+};
+
 return best;
 }
+
+class Algorithm {
+
+
 
 public:
 	Tree decisionTreeLearning(Example& examples, Attributes& attributes, const Example& parent_examples) {
