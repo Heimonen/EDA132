@@ -14,7 +14,7 @@
 
 @DaTa
 Y,N,N,Y,Some,$$$,N,Y,French,0-10,Y
-Y,N,,N,Y,Full,$,N,N,Thai,30-60,N
+Y,N,N,Y,Full,$,N,N,Thai,30-60,N
 N,Y,N,N,Some,$,N,N,Burger,0-10,Y
 Y,N,Y,Y,Full,$,Y,N,Thai,10-30,Y
 Y,N,Y,N,Full,$$$,N,Y,French,>60,N
