@@ -10,6 +10,7 @@ class Example : private vector<unsigned int> {
 	using vector::end;
 	using vector::operator[];
 	using vector::push_back;
+	using vector::size;
 
 public:
 	Example(size_t numElements) : vector(numElements) {}

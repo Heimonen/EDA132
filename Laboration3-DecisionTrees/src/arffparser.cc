@@ -11,7 +11,8 @@ ARFFParser::ARFFParser(const string& inFile) {
 	if (bookExample.is_open()) {
 		while (getline(bookExample, line)) {
 			splitted = GoodString::splitByWhiteSpace(line);
-			if(GoodString::toLowerCase(splitted[0]) == "@attribute") {	
+			string toCompare = GoodString::toLowerCase(splitted[0]);
+			if(toCompare == "@attribute") {	
 				vector<string> newVector;
 				string chars = "{}";
  				splitted[2] = GoodString::removeChars(chars, splitted[2]);
@@ -21,9 +22,17 @@ ARFFParser::ARFFParser(const string& inFile) {
 				}
 				HeaderPair newPair(splitted[1], newVector);
 				headerList.push_back(newPair);
+			} else if(toCompare == "@relation" || toCompare == "@data" || toCompare == "NULL") {
+				//Do nothing
+			//Data
 			} else {
-				cout << "NO ATTRIBUTE: " << line << endl;
-			}		
+				vector<string> data = GoodString::split(line, ',');
+				Example toInsert(headerList.size());
+				for(vector<string>::iterator iterator = data.begin(); iterator != data.end(); ++iterator) {
+					//toInsert.push_back(*iterator);
+				}
+				exampleList.push_back(toInsert);
+			}
 		}
 	}
 	//DEBUGGING
@@ -34,6 +43,12 @@ ARFFParser::ARFFParser(const string& inFile) {
 			cout << "   " << headerList[i].second[j] << endl;
 		}				
 	}
+	/*for(int k = 0; k < exampleList.size(); ++k) {
+		for(int z = 0; z < exampleList[k].size(); ++z) {
+			//cout << exampleList[k][z];
+		}
+		cout << endl;
+	}*/
 	bookExample.close();	
 }
 

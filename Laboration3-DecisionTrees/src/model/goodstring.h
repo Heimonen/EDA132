@@ -32,7 +32,7 @@ static vector<string> splitByWhiteSpace(string toSplit) {
   vector<string> tokens;
   if(toSplit == "") {
     //decide on this
-    tokens.push_back(" ");
+    tokens.push_back("NULL");
     return tokens;
   }
   istringstream iss(toSplit); 
