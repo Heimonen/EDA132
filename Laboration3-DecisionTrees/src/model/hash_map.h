@@ -16,7 +16,7 @@ struct EraseComparator {
 	EraseComparator(Key key) : toLookFor(key) {}
 
 	bool operator()(const pair<Key, Value>& pair) {
-		return pair.first == name;
+		return pair.first == toLookFor;
 	}
 
 private:
@@ -28,6 +28,7 @@ class Hash_Map {
 
 typedef pair<Key, Value> Pair;
 typedef vector<vector<Pair> > Buckets;
+typedef EraseComparator<Key, Value> Eraser;
 
 
 public:
@@ -39,8 +40,8 @@ public:
 
 	bool erase(const Key& key) {
 		vector<Pair>& toDelete = map[hashFunction(key) % map.size()];
-		EraseComparator eraser(key);
-		vector<Pair>::iterator it = find_if(toDelete.begin(), toDelete.end(), eraser);
+		Eraser eraser(key);
+		typename vector<Pair>::iterator it = find_if(toDelete.begin(), toDelete.end(), eraser);
 		if(it != toDelete.end()) {
 			toDelete.erase(it);
 			return true;
@@ -50,18 +51,18 @@ public:
 
 	const Value operator[] (const Key& key) const {
 		const vector<Pair>& toFind = map[hashFunction(key) % map.size()];
-		EraseComparator finder(key);
-		vector<Pair>::const_iterator begin= toFind.begin();
-		vector<Pair>::const_iterator end = toFind.end();
-		vector<Pair>::const_iterator it = find_if(begin, end, finder);
+		Eraser finder(key);
+		typename vector<Pair>::const_iterator begin= toFind.begin();
+		typename vector<Pair>::const_iterator end = toFind.end();
+		typename vector<Pair>::const_iterator it = find_if(begin, end, finder);
 		if(it != toFind.end()) {
 			return it->second;
 		} else {
-			return Value;
+			return Value();
 		}
 	}
 private:
-	Map map;
+	Buckets map;
 
 	size_t hashFunction(const Key& key) const {
 		hash<Key> H;

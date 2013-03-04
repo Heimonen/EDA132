@@ -1,7 +1,7 @@
 #include "arffparser.h"
 
 
-ARFFParser::ARFFParser(const string& inFile) {
+ARFFParser::ARFFParser(const string& inFile) : headerList(75) {
 	ifstream bookExample;
  	bookExample.open(inFile);
 	vector<string> whiteSpaceSplit;
@@ -13,18 +13,18 @@ ARFFParser::ARFFParser(const string& inFile) {
 			string toCompare = GoodString::toLowerCase(whiteSpaceSplit[0]);
 			if(toCompare == "@attribute") {	
 			//	vector<string> newVector;
-				BiMap biMap;
+				BiMap biMap(25);
 				string chars = "{}";
  				whiteSpaceSplit[2] = GoodString::removeChars(chars, whiteSpaceSplit[2]);
 				vector<string> attributes = GoodString::split(whiteSpaceSplit[2], ',');
 				int counter = 0;
 				for(vector<string>::iterator it = attributes.begin(); it != attributes.end(); ++it) {
 				//	newVector.push_back(*it);
-					LeftPair pairToInsert(counter, *it);
+					typename BiMap::LeftPair pairToInsert(counter, *it);
 					biMap.insert(pairToInsert);
 					++counter;
 				}
-				HeaderPair newPair(whiteSpaceSplit[1], biMap);
+				typename BiMap::LeftPair newPair(whiteSpaceSplit[1], biMap);
 				//headerList.push_back(newPair);
 				headerList.insert(newPair);
 
