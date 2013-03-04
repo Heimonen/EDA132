@@ -14,7 +14,6 @@ public:
 	BiHashMap(unsigned int size) : left(size), right(size) {}
 	BiHashMap() : left(1), right(1) {}
 
-
 	bool empty() {
 		return left.empty() && right.empty();
 	}
@@ -26,5 +25,5 @@ public:
 		left.insert(pair);
 		right.insert(rightPair);
 	}
-	
 };
+	
