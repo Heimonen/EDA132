@@ -9,6 +9,7 @@ ARFFParser::ARFFParser(const string& inFile) : headerList(75) {
 	string line;
 	ExampleList currentList;
 	if (bookExample.is_open()) {
+		int attributeCounter = 0;
 		while (getline(bookExample, line)) {
 			whiteSpaceSplit = GoodString::splitByWhiteSpace(line);
 			string toCompare = GoodString::toLowerCase(whiteSpaceSplit[0]);
@@ -25,7 +26,8 @@ ARFFParser::ARFFParser(const string& inFile) : headerList(75) {
 					biMap.insert(pairToInsert);
 					++counter;
 				}
-				pair<string, BiMap> newPair(whiteSpaceSplit[1], biMap);
+				pair<int, BiMap> newPair(attributeCounter, biMap);
+				++attributeCounter;
 			//	typename BiMap::LeftPair newPair(whiteSpaceSplit[1], biMap);
 				//headerList.push_back(newPair);
 				headerList.insert(newPair);
@@ -43,6 +45,7 @@ ARFFParser::ARFFParser(const string& inFile) : headerList(75) {
 			}
 		}
 	}
+	cout << headerList[0].right[0] << endl; //Y
 	//DEBUGGING
 	//cout << headerList.size() << endl;
 /*	for(int i = 0; i < headerList.size(); ++i) {

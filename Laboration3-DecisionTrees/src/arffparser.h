@@ -23,7 +23,7 @@ class ARFFParser {
 	//typedef pair<string, vector<string>> HeaderPair;
 	//typedef vector<HeaderPair> HeaderList;
 	typedef BiHashMap<string, size_t> BiMap;
-	typedef Hash_Map<string, BiMap > HeaderList;
+	typedef Hash_Map<int, BiMap > HeaderList;
 public:
 	ARFFParser(const string& inFile);
 private:
