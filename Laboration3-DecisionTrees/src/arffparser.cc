@@ -14,38 +14,48 @@ ARFFParser::ARFFParser(const string& inFile) : headerList(75) {
 			whiteSpaceSplit = GoodString::splitByWhiteSpace(line);
 			string toCompare = GoodString::toLowerCase(whiteSpaceSplit[0]);
 			if(toCompare == "@attribute") {	
-			//	vector<string> newVector;
 				BiMap biMap(25);
 				string chars = "{}";
  				whiteSpaceSplit[2] = GoodString::removeChars(chars, whiteSpaceSplit[2]);
 				vector<string> attributes = GoodString::split(whiteSpaceSplit[2], ',');
 				int counter = 0;
 				for(vector<string>::iterator it = attributes.begin(); it != attributes.end(); ++it) {
-				//	newVector.push_back(*it);
 					typename BiMap::LeftPair pairToInsert(*it, counter);
 					biMap.insert(pairToInsert);
 					++counter;
 				}
 				pair<int, BiMap> newPair(attributeCounter, biMap);
 				++attributeCounter;
-			//	typename BiMap::LeftPair newPair(whiteSpaceSplit[1], biMap);
-				//headerList.push_back(newPair);
 				headerList.insert(newPair);
 
 			} else if(toCompare == "@relation" || toCompare == "@data" || toCompare == "NULL") {
 				//Do nothing
 			//Data
 			} else {
-			/*	vector<string> data = GoodString::split(line, ',');
-				Example toInsert(headerList.size());
+				vector<string> data = GoodString::split(line, ',');
+				Example toInsert(attributeCounter);
+				int c = 0;
 				for(vector<string>::iterator iterator = data.begin(); iterator != data.end(); ++iterator) {
-					//toInsert.push_back(*iterator);
+					toInsert.push_back(headerList[c].left[*iterator]);
+					++c;
 				}
-				exampleList.push_back(toInsert); */
+				exampleList.push_back(toInsert); 
 			}
 		}
 	}
 	cout << headerList[0].right[0] << endl; //Y
+	cout << headerList[5].right[2] << endl; //$$$
+	cout << headerList[10].right[1] << endl; //N
+	cout << headerList[9].right[3] << endl; //>60
+	for(int i = 0; i < exampleList.size(); ++i) {
+		for(int j = 0; exampleList[i].size(); ++j ) {
+			cout << exampleList[i][j] << " ";
+		}
+		cout << endl;
+	}
+	//for(vector<Example> it = exampleList.begin; it != exampleList.end(); ++it) {
+		
+	//}
 	//DEBUGGING
 	//cout << headerList.size() << endl;
 /*	for(int i = 0; i < headerList.size(); ++i) {
