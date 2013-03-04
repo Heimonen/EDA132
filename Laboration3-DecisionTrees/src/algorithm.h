@@ -11,10 +11,10 @@ using std::vector;
 
 #include "model/example.h"
 
-template<typename Attribute, typename AttributeValue, typename ClassificationValue>
+template<typename Attribute, typename AttributeValue>
 struct TreeNode : public vector<pair<Attribute, AttributeValue> > {	
 public:
-	ClassificationValue value;
+	AttributeValue value;
 	bool isLeaf() {
 		return vector<pair<Attribute, AttributeValue> >::empty();
 	}
@@ -52,19 +52,18 @@ class Algorithm {
 	typedef vector<Example> Examples;
 	typedef unsigned int Attribute;
 	typedef unsigned int AttributeValue;
-	typedef bool ClassificationValue;
 	typedef vector<AttributeValue> Attributes;
-	typedef TreeNode<Attribute, AttributeValue, ClassificationValue> Tree;
+	typedef TreeNode<Attribute, AttributeValue> Tree;
 
 public:
-	static Tree decisionTreeLearning(Examples& examples, Attributes& attributes, const Examples& parent_examples) {
+	static Tree decisionTreeLearning(Examples& examples, Attributes& attributes, Examples& parent_examples) {
 		Tree subTree;
 		if(examples.empty()) {
 			subTree.value = pluralityValue(parent_examples);
 			return subTree;
 		} else {
 			{
-				pair<bool, ClassificationValue> hsc = hasSameClassification(parent_examples);
+				pair<bool, AttributeValue> hsc = hasSameClassification(parent_examples);
 				if(hsc.first) {
 					subTree.value = hsc.second;
 					return subTree;
@@ -82,12 +81,22 @@ public:
 		}
 	}
 private:
-	static ClassificationValue pluralityValue(const Examples& parent_examples) {
+	static AttributeValue pluralityValue(const Examples& parent_examples) {
 
 	}
 
-	static pair<bool, ClassificationValue> hasSameClassification(const Examples& examples) {
-
+	static pair<bool, AttributeValue> hasSameClassification(Examples& examples) {
+		pair<bool, AttributeValue> rtn;
+		Examples::iterator i = examples.begin();
+		rtn.second = *((*i++).rbegin());
+		rtn.first = false;
+		for(; i != examples.end(); ++i) {
+			if(rtn.second != *((*i).rbegin()) ) {
+				return rtn;
+			}
+		}
+		rtn.second = true;
+		return rtn;
 	}
 
 };

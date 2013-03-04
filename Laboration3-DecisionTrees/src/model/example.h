@@ -5,12 +5,7 @@
 using std::vector;
 #include <string> // for size_t
 
-class Example : private vector<unsigned int> {
-	using vector::begin;
-	using vector::end;
-	using vector::operator[];
-	using vector::push_back;
-	using vector::size;
+class Example : public vector<unsigned int> {
 
 public:
 	Example(size_t numElements) : vector(numElements) {}
