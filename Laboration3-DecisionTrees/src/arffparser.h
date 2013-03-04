@@ -3,6 +3,8 @@
 
 #include "model/example.h"
 #include "model/goodstring.h"
+#include "model/bihashmap.h"
+#include "model/hash_map.h"
 #include <vector>
 #include <string>
 #include <iostream>
@@ -18,9 +20,10 @@ using namespace std;
 
 class ARFFParser {
 	typedef vector<Example> ExampleList;
-	typedef pair<string, vector<string>> HeaderPair;
-	typedef vector<HeaderPair> HeaderList;
-
+	//typedef pair<string, vector<string>> HeaderPair;
+	//typedef vector<HeaderPair> HeaderList;
+	typedef BiHashMap<string, size_t> BiMap;
+	typedef hash_map<string, BiMap> > HeaderList;
 public:
 	ARFFParser(const string& inFile);
 private:
