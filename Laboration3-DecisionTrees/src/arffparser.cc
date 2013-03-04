@@ -1,5 +1,6 @@
 #include "arffparser.h"
-
+#include <utility>
+using std::pair;
 
 ARFFParser::ARFFParser(const string& inFile) : headerList(75) {
 	ifstream bookExample;
@@ -20,15 +21,12 @@ ARFFParser::ARFFParser(const string& inFile) : headerList(75) {
 				int counter = 0;
 				for(vector<string>::iterator it = attributes.begin(); it != attributes.end(); ++it) {
 				//	newVector.push_back(*it);
-					typename BiMap::LeftPair pairToInsert(counter, *it);
+					typename BiMap::LeftPair pairToInsert(*it, counter);
 					biMap.insert(pairToInsert);
 					++counter;
 				}
-
-			//	Pair newPair(whiteSpaceSplit[1], biMap);
-
-				typename BiMap::LeftPair newPair(whiteSpaceSplit[1], biMap);
-
+				pair<string, BiMap> newPair(whiteSpaceSplit[1], biMap);
+			//	typename BiMap::LeftPair newPair(whiteSpaceSplit[1], biMap);
 				//headerList.push_back(newPair);
 				headerList.insert(newPair);
 
@@ -36,17 +34,17 @@ ARFFParser::ARFFParser(const string& inFile) : headerList(75) {
 				//Do nothing
 			//Data
 			} else {
-				vector<string> data = GoodString::split(line, ',');
+			/*	vector<string> data = GoodString::split(line, ',');
 				Example toInsert(headerList.size());
 				for(vector<string>::iterator iterator = data.begin(); iterator != data.end(); ++iterator) {
 					//toInsert.push_back(*iterator);
 				}
-				exampleList.push_back(toInsert);
+				exampleList.push_back(toInsert); */
 			}
 		}
 	}
 	//DEBUGGING
-	cout << headerList.size() << endl;
+	//cout << headerList.size() << endl;
 /*	for(int i = 0; i < headerList.size(); ++i) {
 		cout << headerList[i].first << ": " << endl;
 		for(int j = 0; j < headerList[i].second.size(); ++j) {
