@@ -24,7 +24,7 @@ ARFFParser::ARFFParser(const string& inFile) {
 					biMap.insert(pairToInsert);
 					++counter;
 				}
-				HeaderPair newPair(whiteSpaceSplit[1], biMap);
+				Pair newPair(whiteSpaceSplit[1], biMap);
 				//headerList.push_back(newPair);
 				headerList.insert(newPair);
 
