@@ -76,7 +76,7 @@ public:
 				Importance<Attribute, Examples> functor;
 				functor.meta = examples;
 				Attribute mostImportant = *argmax(attributes.begin(), attributes.end(), functor, examples);
-				//foreach()
+				//for()
 			}
 		}
 	}

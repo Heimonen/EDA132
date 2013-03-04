@@ -30,12 +30,12 @@ typedef pair<Key, Value> Pair;
 typedef vector<vector<Pair> > Buckets;
 typedef EraseComparator<Key, Value> Eraser;
 
-
 public:
-	Hash_Map(int size) : map(size, vector<Pair>()) {}
+	Hash_Map(int size) : map(size, vector<Pair>()), elemCount(0) {}
 
 	void insert(const Pair& val) {
 		map[hashFunction(val.first) % map.size()].push_back(val);
+		++elemCount;
 	}
 
 	bool erase(const Key& key) {
@@ -44,6 +44,7 @@ public:
 		typename vector<Pair>::iterator it = find_if(toDelete.begin(), toDelete.end(), eraser);
 		if(it != toDelete.end()) {
 			toDelete.erase(it);
+			--elemCount;
 			return true;
 		}
 		return false;
@@ -61,14 +62,19 @@ public:
 			return Value();
 		}
 	}
+
+	size_t size () {
+		return elemCount;
+	}
+
 private:
 	Buckets map;
+	size_t elemCount;
 
 	size_t hashFunction(const Key& key) const {
 		hash<Key> H;
 		return H(key);
 	}
 };
-
 
 #endif
