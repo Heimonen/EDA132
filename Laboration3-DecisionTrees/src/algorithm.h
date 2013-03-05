@@ -11,6 +11,9 @@ using std::unary_function;
 using std::pair;
 #include <vector>
 using std::vector;
+#include <iostream>
+using std::cout;
+using std::endl;
 
 #include "model/example.h"
 #include "arffparser.h"
@@ -20,8 +23,23 @@ struct TreeNode;
 struct TreeNode : public vector<pair<unsigned int, TreeNode*> > {	
 public:
 	unsigned int value;
-	bool isLeaf() {
-		return vector<pair<unsigned int, TreeNode* > >::empty();
+
+	void print(ARFFParser::HeaderList& header, vector<string>& headerLookupList, unsigned int& classification_id) {
+		print(0,header,headerLookupList, classification_id);
+	}
+private:
+	void print(size_t depth,ARFFParser::HeaderList& header, vector<string>& headerLookupList, unsigned int& classification_id) {
+		if(empty()) {
+			cout << ": " << header[classification_id].right[value];
+		}
+		cout << endl;
+		for(size_t i = depth; i != 0; --i) {
+			cout << '\t';
+		}
+		for(vector<pair<unsigned int, TreeNode*> >::iterator i = begin(); i != end(); ++i){
+			cout << headerLookupList[value] << " = " << header[value].right[i->first];
+			i->second->print(depth+1, header, headerLookupList, classification_id);
+		}
 	}
 };
 

@@ -17,10 +17,10 @@
 using namespace std;
 
 class ARFFParser {
+public:
 	typedef vector<Example> ExampleList;
 	typedef BiHashMap<string, size_t> BiMap;
 	typedef Hash_Map<int, BiMap > HeaderList;
-public:
 	ARFFParser(const string& inFile);
 	ExampleList exampleList;
 	HeaderList headerList;
