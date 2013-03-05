@@ -8,7 +8,7 @@ CXXFLAGS  = -pipe -Wall -W -ansi -pedantic-errors -std=c++11
 CXXFLAGS += -Wmissing-braces -Wparentheses -Wold-style-cast
 CC        = $(CXX)
 
-ALLTARGETS = lab3
+ALLTARGETS = randfind lab3
 
 # insert this line somewhere at the top of the file
 DEBUG = false

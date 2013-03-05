@@ -52,7 +52,8 @@ class Algorithm {
 	typedef vector<Example> Examples;
 	typedef unsigned int Attribute;
 	typedef unsigned int AttributeValue;
-	typedef vector<AttributeValue> Attributes;
+	typedef BiHashMap<size_t, string> AttributeValues;
+	typedef Hash_Map<int, AttributeValues> Attributes;
 	typedef TreeNode<Attribute, AttributeValue> Tree;
 
 public:
@@ -69,14 +70,19 @@ public:
 					return subTree;
 				}
 			}
-			if(attributes.empty()) {
+			if(attributes.size() == 0) {
 				subTree.value = pluralityValue(examples);
 				return subTree;
 			} else {
 				Importance<Attribute, Examples> functor;
 				functor.meta = examples;
-				Attribute mostImportant = *argmax(attributes.begin(), attributes.end(), functor, examples);
-				//for()
+				
+				/*AttributeValues mostImportant = attributes[*argmax(attributes.begin(), attributes.end(), functor, examples)];
+
+				
+				for(AttributeValues::iterator i = mostImportant.begin(); i != mostImportant.end(); ++i) {
+
+				}*/
 			}
 		}
 	}
