@@ -23,7 +23,8 @@ class ARFFParser {
 public:
 	ARFFParser(const string& inFile);
 	ExampleList exampleList;
-	HeaderList headerList;	
+	HeaderList headerList;
+	vector<string> headerLookupList;
 };
 
 #endif

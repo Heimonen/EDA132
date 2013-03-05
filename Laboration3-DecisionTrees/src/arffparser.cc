@@ -1,6 +1,4 @@
 #include "arffparser.h"
-#include <utility>
-using std::pair;
 
 ARFFParser::ARFFParser(const string& inFile) : headerList(75) {
 	ifstream bookExample;
@@ -27,6 +25,7 @@ ARFFParser::ARFFParser(const string& inFile) : headerList(75) {
 				pair<int, BiMap> newPair(attributeCounter, biMap);
 				++attributeCounter;
 				headerList.insert(newPair);
+				headerLookupList.push_back(whiteSpaceSplit[1]);
 			} else if(toCompare == "@relation" || toCompare == "@data" || toCompare == "null") {
 				;//Do nothing
 			} else {
