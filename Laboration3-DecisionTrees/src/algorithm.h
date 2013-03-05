@@ -56,7 +56,7 @@ public:
 
 				vector<pair<int, BiMap> >::iterator it = bit->begin();
 				while(it == bit->end()) {
-					++it;
+					++bit;
 					it = bit->begin();
 				}
 
@@ -88,7 +88,7 @@ public:
 						}
 						Attributes na = attributes;
 						na.erase(best->first);
-						cout << "lol" << endl;
+						Example::printList(exs);
 						TreeNode* subtree = decisionTreeLearning(exs,na,examples);
 						realTree->push_back(pair<unsigned int, TreeNode*>(j->second, subtree));
 					}

@@ -41,13 +41,7 @@ ARFFParser::ARFFParser(const string& inFile) : headerList(75) {
 		}
 	}
 	//DEBUGGING
-	cout << "Example list:" << endl;
-	for(vector<Example>::iterator it = exampleList.begin(); it != exampleList.end(); ++it) {
-		for(vector<unsigned int>::iterator ite = it->begin(); ite != it->end(); ++ite) {
-			cout << *ite << " ";
-		}
-		cout << endl;
-	}
+	Example::printList(exampleList);
 	bookExample.close();	
 }
 
