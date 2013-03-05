@@ -12,23 +12,18 @@
 #include <algorithm>
 #include <utility>
 #include <iterator>
-
-
 #include <sstream>
 
 using namespace std;
 
 class ARFFParser {
 	typedef vector<Example> ExampleList;
-	//typedef pair<string, vector<string>> HeaderPair;
-	//typedef vector<HeaderPair> HeaderList;
 	typedef BiHashMap<string, size_t> BiMap;
 	typedef Hash_Map<int, BiMap > HeaderList;
 public:
 	ARFFParser(const string& inFile);
-private:
 	ExampleList exampleList;
-	HeaderList headerList;
+	HeaderList headerList;	
 };
 
 #endif
