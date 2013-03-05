@@ -11,6 +11,7 @@ using std::find_if;
 #include <functional>
 using std::hash;
 
+
 template<typename Key, typename Value>
 struct EraseComparator {
 	EraseComparator(Key key) : toLookFor(key) {}
@@ -67,8 +68,8 @@ public:
 		return elemCount;
 	}
 
-private:
 	Buckets map;
+private:
 	size_t elemCount;
 
 	size_t hashFunction(const Key& key) const {

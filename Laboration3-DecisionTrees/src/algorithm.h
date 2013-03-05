@@ -22,17 +22,7 @@ public:
 
 template<typename IteratorT, typename HeuristicFunctorT, typename Metadata>
 IteratorT argmax(IteratorT it, const IteratorT& end, const HeuristicFunctorT& functor, const Metadata& meta) {
-	IteratorT best(it++);
-	typename HeuristicFunctorT::result_type best_value(functor(*best));
-
-	for(; it != end; ++it) {
-	    typename HeuristicFunctorT::result_type value(functor(*it));
-
-	    if (value > best_value) {
-	        best_value = value;
-	        best = it;
-	    }
-	}
+	
 
 	return best;
 }
@@ -77,12 +67,24 @@ public:
 				Importance<Attribute, Examples> functor;
 				functor.meta = examples;
 				
-				/*AttributeValues mostImportant = attributes[*argmax(attributes.begin(), attributes.end(), functor, examples)];
+				
+				AttributeValues
+				IteratorT best(it++);
+				unsigned int best_value(functor(*best));
+
+				for(vector<vector<; it != end; ++it) {
+				    unsigned value(functor(*it));
+
+				    if (value > best_value) {
+				        best_value = value;
+				        best = it;
+				    }
+				}
 
 				
 				for(AttributeValues::iterator i = mostImportant.begin(); i != mostImportant.end(); ++i) {
 
-				}*/
+				}
 			}
 		}
 	}
