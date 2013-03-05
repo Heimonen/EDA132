@@ -1,6 +1,9 @@
 #ifndef ALGORITHM_H__
 #define ALGORITHM_H__
 
+
+#include <map>
+using std::map;
 #include <algorithm>
 using std::unary_function; 
 #include <cstdlib> // rand;
@@ -94,8 +97,21 @@ public:
 		}
 	}
 private:
-	static AttributeValue pluralityValue(const Examples& parent_examples) {
-
+	static AttributeValue pluralityValue(const Examples& parent_examples, const unsigned int& classification_id) {
+		map<unsigned int, unsigned int> count;
+		for(vector<Example>::iterator i = parent_examples.begin(); i != parent_examples.end(); ++i) {
+			++count[(*i)[classification_id]];
+		}
+		map<unsigned int, unsigned int>::iterator i = count.begin();
+		pair<unsigned int, unsigned int> best(i++);
+		unsigned int best_value = best.second;
+		for(; i != count.end(); ++i) {
+			if(i->second > best_value) {
+				best = *i
+				best_value = best.second;
+			}
+		}
+		return best.first;
 	}
 
 	static pair<bool, AttributeValue> hasSameClassification(Examples& examples) {
