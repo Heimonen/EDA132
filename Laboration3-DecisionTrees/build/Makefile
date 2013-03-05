@@ -36,7 +36,7 @@ all: $(ALLTARGETS)
 
 
 # Linking:
-lab3: lab3.o arffparser.o
+lab3: lab3.o arffparser.o algorithm.o
 
 # Dependencies, the implicit rule .cc => .o is used
 include $(sources:.cc=.dd)
