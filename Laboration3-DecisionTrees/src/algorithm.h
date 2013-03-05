@@ -96,18 +96,19 @@ public:
 			}
 		}
 	}
+	static unsigned int classification_id;
 private:
-	static AttributeValue pluralityValue(const Examples& parent_examples, const unsigned int& classification_id) {
+	static AttributeValue pluralityValue(const Examples& parent_examples) {
 		map<unsigned int, unsigned int> count;
-		for(vector<Example>::iterator i = parent_examples.begin(); i != parent_examples.end(); ++i) {
+		for(vector<Example>::const_iterator i = parent_examples.begin(); i != parent_examples.end(); ++i) {
 			++count[(*i)[classification_id]];
 		}
 		map<unsigned int, unsigned int>::iterator i = count.begin();
-		pair<unsigned int, unsigned int> best(i++);
+		pair<unsigned int, unsigned int> best(*(i++));
 		unsigned int best_value = best.second;
 		for(; i != count.end(); ++i) {
 			if(i->second > best_value) {
-				best = *i
+				best = *i;
 				best_value = best.second;
 			}
 		}
