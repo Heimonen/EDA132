@@ -10,81 +10,86 @@ using std::pair;
 using std::vector;
 
 #include "model/example.h"
+#include "arffparser.h"
 
-template<typename Attribute, typename AttributeValue>
-struct TreeNode : public vector<pair<Attribute, AttributeValue> > {	
+struct TreeNode;
+
+struct TreeNode : public vector<pair<unsigned int, TreeNode*> > {	
 public:
-	AttributeValue value;
+	unsigned int value;
 	bool isLeaf() {
-		return vector<pair<Attribute, AttributeValue> >::empty();
+		return vector<pair<unsigned int, TreeNode* > >::empty();
 	}
 };
-
-template<typename IteratorT, typename HeuristicFunctorT, typename Metadata>
-IteratorT argmax(IteratorT it, const IteratorT& end, const HeuristicFunctorT& functor, const Metadata& meta) {
-	
-
-	return best;
-}
-
-template<typename Attribute, typename Examples>
-struct Importance : public unary_function<const Attribute&, int> {
-public:
-	Examples meta;
-	int operator() (const Attribute& attr ) const {
-		return (rand()%10); // implement proper evaluation!
-	}
-};
-
-//template<typename Attribute
 
 class Algorithm {
 	typedef vector<Example> Examples;
 	typedef unsigned int Attribute;
 	typedef unsigned int AttributeValue;
-	typedef BiHashMap<size_t, string> AttributeValues;
-	typedef Hash_Map<int, AttributeValues> Attributes;
-	typedef TreeNode<Attribute, AttributeValue> Tree;
+	typedef typename ARFFParser::BiMap BiMap;
+
+	typedef Hash_Map<int, BiMap> Attributes;
+	typedef TreeNode Tree;
 
 public:
-	static Tree decisionTreeLearning(Examples& examples, Attributes& attributes, Examples& parent_examples) {
-		Tree subTree;
+	static Tree* decisionTreeLearning(Examples& examples, Attributes& attributes, Examples& parent_examples) {
+		Tree* realTree = new TreeNode;
 		if(examples.empty()) {
-			subTree.value = pluralityValue(parent_examples);
-			return subTree;
+			realTree->value = pluralityValue(parent_examples);
+			return realTree;
 		} else {
 			{
 				pair<bool, AttributeValue> hsc = hasSameClassification(parent_examples);
 				if(hsc.first) {
-					subTree.value = hsc.second;
-					return subTree;
+					realTree->value = hsc.second;
+					return realTree;
 				}
 			}
 			if(attributes.size() == 0) {
-				subTree.value = pluralityValue(examples);
-				return subTree;
+				realTree->value = pluralityValue(examples);
+				return realTree;
 			} else {
-				Importance<Attribute, Examples> functor;
-				functor.meta = examples;
-				
-				
-				AttributeValues
-				IteratorT best(it++);
-				unsigned int best_value(functor(*best));
+				vector<vector<pair<int, BiMap> > >::iterator bit = attributes.map.begin();
 
-				for(vector<vector<; it != end; ++it) {
-				    unsigned value(functor(*it));
-
-				    if (value > best_value) {
-				        best_value = value;
-				        best = it;
-				    }
+				vector<pair<int, BiMap> >::iterator it = bit->begin();
+				while(it == bit->end()) {
+					++it;
+					it = bit->begin();
 				}
 
-				
-				for(AttributeValues::iterator i = mostImportant.begin(); i != mostImportant.end(); ++i) {
+				pair<int, BiMap>* best = &(*it);
+				unsigned int best_value(rand() % 10); // use importance here aswell
 
+				for(; bit != attributes.map.end(); ++bit) {
+					for(it = bit->begin();it != bit->end(); ++it) {
+
+					    unsigned int value = rand() % 10; //TODO implement importance
+
+					    if (value > best_value) {
+					        best_value = value;
+					        best = &(*it);
+					    }
+					}
 				}
+
+				BiMap mostImportant = best->second;
+				realTree->value = best->first;
+
+				for(vector<vector<pair<string, size_t> > >::iterator i = mostImportant.left.map.begin(); i != mostImportant.left.map.end(); ++i) {
+					for(vector<pair<string, size_t> >::iterator j = i->begin(); j != i->end(); ++j) {
+						vector<Example> exs;
+						for(vector<Example>::iterator ei = examples.begin(); ei != examples.end(); ++ei) {
+							if((*ei)[best->first] == j->second) {
+								exs.push_back(*ei);
+							}
+						}
+						Attributes na = attributes;
+						na.erase(best->first);
+						TreeNode* subtree = decisionTreeLearning(exs,na,examples);
+						realTree->push_back(pair<unsigned int, TreeNode*>(j->second, subtree));
+					}
+				}
+				return realTree;
 			}
 		}
 	}
