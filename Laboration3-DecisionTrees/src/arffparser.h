@@ -20,7 +20,7 @@ class ARFFParser {
 public:
 	typedef vector<Example> ExampleList;
 	typedef BiHashMap<string, size_t> BiMap;
-	typedef Hash_Map<int, BiMap > HeaderList;
+	typedef Hash_Map<unsigned int, BiMap > HeaderList;
 	ARFFParser(const string& inFile);
 	ExampleList exampleList;
 	HeaderList headerList;

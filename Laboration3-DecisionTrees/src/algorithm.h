@@ -1,7 +1,7 @@
 #ifndef ALGORITHM_H__
 #define ALGORITHM_H__
 
-
+#include <cmath>
 #include <map>
 using std::map;
 #include <algorithm>
@@ -49,7 +49,7 @@ class Algorithm {
 	typedef unsigned int AttributeValue;
 	typedef typename ARFFParser::BiMap BiMap;
 
-	typedef Hash_Map<int, BiMap> Attributes;
+	typedef Hash_Map<unsigned int, BiMap> Attributes;
 	typedef TreeNode Tree;
 
 public:
@@ -147,6 +147,64 @@ private:
 		rtn.second = true;
 		return rtn;
 	}
+
+	static double B(double q) {
+		return -(q * log2(q) + (1-q) * log2(1-q));
+	}
+
+	static double Reminder(unsigned int& attribute, Examples& e, ARFFParser::HeaderList& header) {
+		size_t index = 0;
+		string empty;
+		ARFFParser::BiMap attrValues = header[attribute];
+		double sum = 0;
+		string get;
+		while((get = attrValues.right[index]) != empty) {
+			sum += ((getPk(attribute,index,e)+getNk(attribute,index,e))/(getP(attribute,e) + getN(attribute, e))) * B(static_cast<double>(getPk(attribute,index,e))/(getPk(attribute,index,e) + getNk(attribute,index,e)));
+			++index;
+		}
+		return sum;
+	}
+
+	static size_t getPk(unsigned int& attribute, size_t& attrVal, Examples e) {
+		size_t count = 0;
+		for(Examples::iterator i = e.begin(); i != e.end(); ++i) {
+			if( (*i)[classification_id] == 0 && (*i)[attribute] == attrVal){
+				++count;
+			}
+		}
+		return  count;
+	}
+
+	static size_t getNk(unsigned int& attribute, size_t& attrVal, Examples e) {
+		size_t count = 0;
+		for(Examples::iterator i = e.begin(); i != e.end(); ++i) {
+			if((*i)[classification_id] == 1 &&(*i)[attribute] == attrVal){
+				++count;
+			}
+		}
+		return  count;
+	}
+
+	static size_t getP(unsigned int attr, Examples& e) {
+		size_t count = 0;
+		for(Examples::iterator i = e.begin(); i != e.end(); ++i) {
+			if((*i)[classification_id] == 0){ // Y
+				++count;
+			}
+		}
+		return  count;
+	}
+
+	static size_t getN(unsigned int attr, Examples& e) {
+		size_t count = 0;
+		for(Examples::iterator i = e.begin(); i != e.end(); ++i) {
+			if((*i)[classification_id] == 1){ // N
+				++count;
+			}
+		}
+		return  count;
+	}
+
 
 };
 
