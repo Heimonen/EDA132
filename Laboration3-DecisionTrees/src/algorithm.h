@@ -42,7 +42,7 @@ public:
 			return realTree;
 		} else {
 			{
-				pair<bool, AttributeValue> hsc = hasSameClassification(parent_examples);
+				pair<bool, AttributeValue> hsc = hasSameClassification(examples);
 				if(hsc.first) {
 					realTree->value = hsc.second;
 					return realTree;
@@ -88,6 +88,7 @@ public:
 						}
 						Attributes na = attributes;
 						na.erase(best->first);
+						cout << "lol" << endl;
 						TreeNode* subtree = decisionTreeLearning(exs,na,examples);
 						realTree->push_back(pair<unsigned int, TreeNode*>(j->second, subtree));
 					}
