@@ -29,16 +29,20 @@ public:
 	}
 private:
 	void print(size_t depth,ARFFParser::HeaderList& header, vector<string>& headerLookupList, unsigned int& classification_id) {
-		if(empty()) {
-			cout << ": " << header[classification_id].right[value];
-		}
-		cout << endl;
-		for(size_t i = depth; i != 0; --i) {
-			cout << '\t';
-		}
 		for(vector<pair<unsigned int, TreeNode*> >::iterator i = begin(); i != end(); ++i){
+			indent(depth);
 			cout << headerLookupList[value] << " = " << header[value].right[i->first];
-			i->second->print(depth+1, header, headerLookupList, classification_id);
+			if(i->second->empty()) {
+				cout << ": " << header[classification_id].right[i->second->value] << endl;
+			} else {
+				cout << endl;
+				i->second->print(depth+1, header, headerLookupList, classification_id);
+			}
+		}
+	}
+	void indent(size_t depth) {
+		for(size_t i = depth; i != 0; --i) {
+			cout << ' ';
 		}
 	}
 };
@@ -76,14 +80,14 @@ public:
 					return realTree;
 				}
 			}
-			if(attributes.size() == 0) {
+			if(attributes.size() == 1) {
 				realTree->value = pluralityValue(examples);
 				return realTree;
 			} else {
 				vector<vector<pair<unsigned int, BiMap> > >::iterator bit = attributes.map.begin();
 
 				vector<pair<unsigned int, BiMap> >::iterator it = bit->begin();
-				while(it == bit->end()) {
+				while(it == bit->end() || it->first == classification_id) {
 					++bit;
 					it = bit->begin();
 				}
@@ -93,6 +97,9 @@ public:
 
 				for(; bit != attributes.map.end(); ++bit) {
 					for(it = bit->begin();it != bit->end(); ++it) {
+						if(classification_id == it->first) {
+							continue;
+						}
 
 					    double value = Gain(it->first,examples,attributes); //TODO implement importance
 
@@ -116,7 +123,6 @@ public:
 						}
 						Attributes na = attributes;
 						na.erase(best->first);
-						//Example::printList(exs);
 						TreeNode* subtree = decisionTreeLearning(exs,na,examples);
 						realTree->push_back(pair<unsigned int, TreeNode*>(j->second, subtree));
 					}
@@ -154,7 +160,7 @@ private:
 				return rtn;
 			}
 		}
-		rtn.second = true;
+		rtn.first = true;
 		return rtn;
 	}
 
