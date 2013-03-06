@@ -53,6 +53,16 @@ class Algorithm {
 	typedef TreeNode Tree;
 
 public:
+	static void test(Examples& examples, Attributes& attributes, vector<string>& headerLookupList) {
+		cout << "B(0.5)=" << B(0.5) << endl;
+		cout << "B(0)=" << B(0) << endl;
+		cout << "B(1)=" << B(1) << endl;
+		for(unsigned int i = 0; i < 10; ++i ) {
+			cout << headerLookupList[i] << " = " << Gain(i,examples,attributes) << endl;
+		}
+
+	}
+
 	static Tree* decisionTreeLearning(Examples& examples, Attributes& attributes, Examples& parent_examples) {
 		Tree* realTree = new TreeNode;
 		if(examples.empty()) {
@@ -70,21 +80,21 @@ public:
 				realTree->value = pluralityValue(examples);
 				return realTree;
 			} else {
-				vector<vector<pair<int, BiMap> > >::iterator bit = attributes.map.begin();
+				vector<vector<pair<unsigned int, BiMap> > >::iterator bit = attributes.map.begin();
 
-				vector<pair<int, BiMap> >::iterator it = bit->begin();
+				vector<pair<unsigned int, BiMap> >::iterator it = bit->begin();
 				while(it == bit->end()) {
 					++bit;
 					it = bit->begin();
 				}
 
-				pair<int, BiMap>* best = &(*it);
-				unsigned int best_value(rand() % 10); // use importance here aswell
+				pair<unsigned int, BiMap>* best = &(*it);
+				double best_value(Gain(best->first,examples,attributes)); // use importance here aswell
 
 				for(; bit != attributes.map.end(); ++bit) {
 					for(it = bit->begin();it != bit->end(); ++it) {
 
-					    unsigned int value = rand() % 10; //TODO implement importance
+					    double value = Gain(it->first,examples,attributes); //TODO implement importance
 
 					    if (value > best_value) {
 					        best_value = value;
@@ -106,7 +116,7 @@ public:
 						}
 						Attributes na = attributes;
 						na.erase(best->first);
-						Example::printList(exs);
+						//Example::printList(exs);
 						TreeNode* subtree = decisionTreeLearning(exs,na,examples);
 						realTree->push_back(pair<unsigned int, TreeNode*>(j->second, subtree));
 					}
@@ -149,6 +159,9 @@ private:
 	}
 
 	static double B(double q) {
+		if(q == 0 || q == 1){
+			return 0;
+		}
 		return -(q * log2(q) + (1-q) * log2(1-q));
 	}
 
@@ -159,13 +172,32 @@ private:
 		double sum = 0;
 		string get;
 		while((get = attrValues.right[index]) != empty) {
-			sum += ((getPk(attribute,index,e)+getNk(attribute,index,e))/(getP(attribute,e) + getN(attribute, e))) * B(static_cast<double>(getPk(attribute,index,e))/(getPk(attribute,index,e) + getNk(attribute,index,e)));
+			double pk 	= getPk(attribute,index,e);
+			double nk 	= getNk(attribute,index,e);
+			double p 	= getP(attribute,e);
+			double n 	= getN(attribute, e);
+			double b 	= B(pk/(pk + nk));
+			#if DEBUG
+			cout << "Reminder = pk:" << pk << " nk:" << nk << " p:" << p << " n:" << n << " B:" << b << endl; 
+			#endif
+			sum += ((pk+nk)/( p + n )) * b;
 			++index;
 		}
 		return sum;
 	}
 
-	static size_t getPk(unsigned int& attribute, size_t& attrVal, Examples e) {
+	static double Gain(unsigned int& attribute, Examples& e, ARFFParser::HeaderList& header){
+		double p = getP(attribute,e);
+		double n = getN(attribute,e);
+		double reminder  = Reminder(attribute,e,header);
+		double b = B(p/(p+n));
+		#if DEBUG
+		cout << "Gain = p:" << p << " n:" << n << " Reminder:" << reminder << " B:" << b << endl;
+		#endif
+		return b - reminder;
+	}
+
+	static double getPk(unsigned int& attribute, size_t& attrVal, Examples e) {
 		size_t count = 0;
 		for(Examples::iterator i = e.begin(); i != e.end(); ++i) {
 			if( (*i)[classification_id] == 0 && (*i)[attribute] == attrVal){
@@ -175,7 +207,7 @@ private:
 		return  count;
 	}
 
-	static size_t getNk(unsigned int& attribute, size_t& attrVal, Examples e) {
+	static double getNk(unsigned int& attribute, size_t& attrVal, Examples e) {
 		size_t count = 0;
 		for(Examples::iterator i = e.begin(); i != e.end(); ++i) {
 			if((*i)[classification_id] == 1 &&(*i)[attribute] == attrVal){
@@ -185,7 +217,7 @@ private:
 		return  count;
 	}
 
-	static size_t getP(unsigned int attr, Examples& e) {
+	static double getP(unsigned int attr, Examples& e) {
 		size_t count = 0;
 		for(Examples::iterator i = e.begin(); i != e.end(); ++i) {
 			if((*i)[classification_id] == 0){ // Y
@@ -195,7 +227,7 @@ private:
 		return  count;
 	}
 
-	static size_t getN(unsigned int attr, Examples& e) {
+	static double getN(unsigned int attr, Examples& e) {
 		size_t count = 0;
 		for(Examples::iterator i = e.begin(); i != e.end(); ++i) {
 			if((*i)[classification_id] == 1){ // N
