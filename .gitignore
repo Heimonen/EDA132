@@ -49,3 +49,6 @@ local.properties
 ###Sublime###
 
 *.sublime-workspace
+
+*.txt
+*.csv
