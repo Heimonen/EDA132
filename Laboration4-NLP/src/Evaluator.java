@@ -15,13 +15,25 @@ public class Evaluator {
 	}
 
 	public void evaluate() {
-
+		Iterator<Map.Entry<String, PartOfSpeech>> it = posMap.entrySet().iterator();
+		while (it.hasNext()) {
+			Map.Entry<String, PartOfSpeech> pair = (Map.Entry<String, PartOfSpeech>)it.next();
+			Integer pos = pair.getValue().occurrences;
+			if(pos == null) {
+				pos = 0;
+			}
+			Integer ppos = pair.getValue().pposList.get(pair.getKey());
+			if(ppos == null) {
+				ppos = 0;
+			}
+			System.out.println(pair.getKey() + "\t " + ((float)ppos / (float)pos) * 100 + '%');
+		}
 	}
 
-	public void computeConfusionMatrix() {
+	public void computeConfusionMatrix(String fileName) {
 
 		try{
-			FileWriter fstream = new FileWriter("files/confusionMatrix.csv");
+			FileWriter fstream = new FileWriter("files/" + fileName + ".csv");
 			BufferedWriter out = new BufferedWriter(fstream);
 
 			Iterator<Map.Entry<String, PartOfSpeech>> it = posMap.entrySet().iterator();
