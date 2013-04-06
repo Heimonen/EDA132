@@ -11,11 +11,12 @@ public class Parser {
 	private DataInputStream in;
 	private BufferedReader br;
 	private ArrayList<PartOfSpeech> processedCorpra;
-	private HashMap<String, Integer> lemmaOccurences; 
+	private HashMap<String, PartOfSpeech> lemmaOccurences; 
 	private HashMap<String, PartOfSpeech> posOccurences; 
+	private HashMap<String, PartOfSpeech> mostFrequentPOSMap;;
 
 	public Parser(String fileName) {
-		lemmaOccurences = new HashMap<String, Integer>();
+		lemmaOccurences = new HashMap<String, PartOfSpeech>();
 		posOccurences = new HashMap<String, PartOfSpeech>();
 		try{
 			FileInputStream fstream = new FileInputStream(fileName);
@@ -48,14 +49,16 @@ public class Parser {
 	private void processLine(String line) {
 		String[] data = line.split("\\s+");
 		if(data.length > 1) {
-			//LEMMA
+			//LEMMA and word frequency
+			//partOfSpeech.occurrences = word frequency
+			//partOfSpeech.pposList = <pos, frequency>
 			data[1] = data[1].toLowerCase();
-			Integer lemmaOccurred =  lemmaOccurences.get(data[1]);
+			PartOfSpeech lemmaOccurred =  lemmaOccurences.get(data[1]);
 			if(lemmaOccurred != null) {
-				//check if can be done more efficiently
-				lemmaOccurences.put(data[1], lemmaOccurences.get(data[1]) + 1);
+				lemmaOccurred.occurrences++;
+				lemmaOccurred.putPPOS(data[4]);
 			} else {
-				lemmaOccurences.put(data[1], 1);
+				lemmaOccurences.put(data[1], new PartOfSpeech(data[1], data[4]));
 			}
 			//POS
 			PartOfSpeech posOccurred = posOccurences.get(data[4]);
@@ -64,11 +67,11 @@ public class Parser {
 				posOccurred.putPPOS(data[5]);
 			} else {
 				posOccurences.put(data[4], new PartOfSpeech(data[4], data[5]));
-			}
+			}			
 		}
 	}
 
-	public HashMap<String, Integer> getLemmaOccurrences() {
+	public HashMap<String, PartOfSpeech> getLemmaOccurrences() {
 		return lemmaOccurences;
 	}
 

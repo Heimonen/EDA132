@@ -1,5 +1,6 @@
 import java.io.BufferedWriter;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -31,10 +32,10 @@ public class Evaluator {
 	}
 
 	public void computeConfusionMatrix(String fileName) {
-
+		BufferedWriter out = null;
 		try{
 			FileWriter fstream = new FileWriter("files/" + fileName + ".csv");
-			BufferedWriter out = new BufferedWriter(fstream);
+			out = new BufferedWriter(fstream);
 
 			Iterator<Map.Entry<String, PartOfSpeech>> it = posMap.entrySet().iterator();
 			ArrayList<String> posList = new ArrayList<String>();
@@ -50,13 +51,16 @@ public class Evaluator {
 			for(String s : posList) {
 				out.write(s + ';');
 				out.write(posMap.get(s).computeConfusion(posList) + '\n');
-//				System.out.println();
 			}
-			out.close();
-
-		}catch (Exception e){//Catch exception if any
+		}catch (Exception e){
 			e.printStackTrace();
 		}
+		if(out != null) {
+			try {
+				out.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 	}
-
 }
