@@ -3,12 +3,12 @@
 #
 
 # Compiler and compiler options:
-CXX       = clang++
+CXX       = g++
 CXXFLAGS  = -pipe -Wall -W -ansi -pedantic-errors -std=c++11
 CXXFLAGS += -Wmissing-braces -Wparentheses -Wold-style-cast
 CC        = $(CXX)
 
-ALLTARGETS = lab3
+ALLTARGETS = randfind lab3
 
 # insert this line somewhere at the top of the file
 DEBUG = false
@@ -36,6 +36,7 @@ all: $(ALLTARGETS)
 
 
 # Linking:
+lab3: lab3.o arffparser.o algorithm.o
 
 # Dependencies, the implicit rule .cc => .o is used
 include $(sources:.cc=.dd)

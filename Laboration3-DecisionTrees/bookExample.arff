@@ -1,25 +1,25 @@
 @RELATION Resturant
 
-@ATTRIBUtE alternate    {Y,N}
-@ATTRIBuTE bar          {Y,N}
-@ATTRIbUTE friOrSat     {Y,N}
-@ATTRiBUTE hungry       {Y,N}
-@ATTRiBUTE patrons      {None,Some,Full}
-@ATTRiBUTE price        {$,$$,$$$}
-@ATTRiBUTE raining      {Y,N}
-@ATTRiBUTE reservation  {Y,N}
-@ATTRiBUTE type         {French,Italian,Thai,Burger}
-@ATTRiBUTE waitEstimate {0-10,1-30,30-60,>60}
-@ATTrIBUTE class        {Y,N}
+@ATTRIBUTE alternate    {Y,N}
+@ATTRIBUTE bar          {Y,N}
+@ATTRIBUTE friOrSat     {Y,N}
+@ATTRIBUTE hungry       {Y,N}
+@ATTRIBUTE patrons      {None,Some,Full}
+@ATTRIBUTE price        {$,$$,$$$}
+@ATTRIBUTE raining      {Y,N}
+@ATTRIBUTE reservation  {Y,N}
+@ATTRIBUTE type         {French,Italian,Thai,Burger}
+@ATTRIBUTE waitEstimate {0-10,1-30,30-60,>60}
+@ATTRIBUTE class        {Y,N}
 
 @DaTa
 Y,N,N,Y,Some,$$$,N,Y,French,0-10,Y
-Y,N,,N,Y,Full,$,N,N,Thai,30-60,N
+Y,N,N,Y,Full,$,N,N,Thai,30-60,N
 N,Y,N,N,Some,$,N,N,Burger,0-10,Y
 Y,N,Y,Y,Full,$,Y,N,Thai,10-30,Y
 Y,N,Y,N,Full,$$$,N,Y,French,>60,N
 N,Y,N,Y,Some,$$,Y,Y,Italian,0-10,Y
-N,Y,N,N,None,$,Y,N,Burger,0-10,Y
+N,Y,N,N,None,$,Y,N,Burger,0-10,N
 N,N,N,Y,Some,$$,Y,Y,Thai,0-10,Y
 N,Y,Y,N,Full,$,Y,N,Burger,>60,N
 Y,Y,Y,Y,Full,$$$,N,Y,Italian,10-30,N
