@@ -7,7 +7,7 @@ public class Main {
 		testParser.parse();
 		HashMap<String, PartOfSpeech> trainLemmaOccurrences = testParser.getLemmaOccurrences();
 		HashMap<String, PartOfSpeech> trainPosOccurrences = testParser.getPOSOccurrences();
-		HashMap<String, HashMap<String, Integer>> posBigrams = testParser.getPOSBigrams();
+		HashMap<String, Integer> posBigrams = testParser.getPOSBigrams();
 		Evaluator testEvaluator = new Evaluator(trainPosOccurrences);
 		testEvaluator.computeConfusionMatrix("testConfusionMatrix");
 		

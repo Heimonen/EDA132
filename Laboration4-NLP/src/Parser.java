@@ -13,14 +13,14 @@ public class Parser {
 	private HashMap<String, PartOfSpeech> lemmaOccurences; 
 	private HashMap<String, PartOfSpeech> posOccurences; 
 	private HashMap<String, PartOfSpeech> mostFrequentPOSMap;;
-	private HashMap<String, HashMap<String, Integer>> posBigrams;
+	private HashMap<String, Integer> posBigrams;
 	
 	private String previous;
 
 	public Parser(String fileName) {
 		lemmaOccurences = new HashMap<String, PartOfSpeech>();
 		posOccurences = new HashMap<String, PartOfSpeech>();
-		posBigrams = new HashMap<String, HashMap<String, Integer>>();
+		posBigrams = new HashMap<String, Integer>();
 		try{
 			FileInputStream fstream = new FileInputStream(fileName);
 			in = new DataInputStream(fstream);
@@ -73,20 +73,13 @@ public class Parser {
 			}			
 			//POS BIGRAMS
 			if(previous == null) previous = "START";
-			HashMap<String, Integer> posBigramOccurred = posBigrams.get(previous + " " + data[1]);
-			if(posBigramOccurred != null) {
-				Integer posOccurrences = posBigramOccurred.get(data[4]);
-				if(posOccurrences != null) {
-					posOccurrences++;
-				} else {
-					posBigramOccurred.put(data[4], 1);
-				}
+			Integer posBigramsOccurred = posBigrams.get(previous + " " + data[4]);
+			if(posBigramsOccurred != null) {
+				posBigrams.put(previous + " " + data[4], posBigramsOccurred + 1);
 			} else {
-				HashMap<String, Integer> posMap = new HashMap<String, Integer>();
-				posMap.put(data[4], 1);
-				posBigrams.put(previous + " " + data[1], posMap);
+				posBigrams.put(previous + " " + data[4], 1);
 			}
-			previous = data[1];
+			previous = data[4];
 		}
 	}
 
@@ -98,7 +91,7 @@ public class Parser {
 		return posOccurences;
 	}
 	
-	public HashMap<String, HashMap<String, Integer>> getPOSBigrams() {
+	public HashMap<String, Integer> getPOSBigrams() {
 		return posBigrams;
 	}
 }
