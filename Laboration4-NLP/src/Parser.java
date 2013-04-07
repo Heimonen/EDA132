@@ -38,8 +38,12 @@ public class Parser {
 	public void parse() {
 		String strLine;
 		try {
+			processLine("0 START START START START START");
 			while ((strLine = br.readLine()) != null)   {
 				processLine(strLine);
+				if(strLine.length() > 0 && strLine.split("\\s+")[1].equals(".")) {
+					processLine("0 START START START START START");
+				}
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -65,6 +69,7 @@ public class Parser {
 			if(lemmaOccurred != null) {
 				lemmaOccurred.occurrences++;
 				lemmaOccurred.putPPOS(data[4]);
+				lemmaOccurences.put(data[1], lemmaOccurred);
 			} else {
 				lemmaOccurences.put(data[1], new PartOfSpeech(data[1], data[4]));
 			}
@@ -78,6 +83,9 @@ public class Parser {
 			}			
 			//POS BIGRAMS
 			if(previous == null) previous = "START";
+//			else if(previous.equals('.')) {
+//				previous = "START";
+//			}
 			HashMap<String, Integer> posBigramOccurred = posBigrams.get(previous);
 			if(posBigramOccurred != null) {
 				Integer posOccurrences = posBigramOccurred.get(data[4]);
@@ -122,7 +130,7 @@ public class Parser {
 	 * 
 	 * @return
 	 */
-	public HashMap<String, NPair<String, Float>> getPOSBigrams() {
+	public HashMap<String, NPair<String, Float>> getTransitionGraph() {
 		ArrayList<NPair<String, Float>> posBigramProbabilities = new ArrayList<NPair<String, Float>>();
 		HashMap<String, NPair<String, Float>> toReturn = new HashMap<String, NPair<String, Float>>();
 		Iterator<Map.Entry<String, HashMap<String, Integer>>> it = posBigrams.entrySet().iterator();
@@ -185,19 +193,65 @@ public class Parser {
 			toReturn.put(formPair.getKey(), mostProbablePOS);	
 		}
 		return toReturn;
-	}
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
+	}	
+	
+	public HashMap<String, NPair<String, Float>> getMostProbablePOSForForms() {
+		ArrayList<NPair<String, Float>> posFormProbabilities = new ArrayList<NPair<String, Float>>();
+		HashMap<String, NPair<String, Float>> toReturn = new HashMap<String, NPair<String, Float>>();
+		Iterator<Map.Entry<String,PartOfSpeech>> it = lemmaOccurences.entrySet().iterator();
+		int index = 0;
+		int loopIndex = 0;
+		while (it.hasNext()) {
+			int totalAmount = 0;
+			NPair<String, Float> mostProbablePOS = new NPair<String, Float>("_", Float.MIN_VALUE);
+			Map.Entry<String, PartOfSpeech> formPair = (Map.Entry<String, PartOfSpeech>)it.next();
+			Iterator<Map.Entry<String, Integer>> iter = formPair.getValue().pposList.entrySet().iterator();
+			while(iter.hasNext()) {
+				Map.Entry<String, Integer> posPair = (Map.Entry<String, Integer>)iter.next();
+				totalAmount += posPair.getValue();
+				posFormProbabilities.add(new NPair<String, Float>(posPair.getKey(), (float)posPair.getValue()));
+				index++;
+			}
+			for(int i = loopIndex; i < index; i++) {
+				posFormProbabilities.set(i, new NPair<String, Float>(posFormProbabilities.get(i).e, posFormProbabilities.get(i).v / (float)totalAmount));
+				loopIndex++;
+				if(posFormProbabilities.get(i).v > mostProbablePOS.v) {
+					mostProbablePOS = posFormProbabilities.get(i);
+				}
+			}
+			toReturn.put(formPair.getKey(), mostProbablePOS);	
+		}
+		return toReturn;
+	}		
+	
+	public HashMap<String, Float> getEmissionGraph() {
+		ArrayList<NPair<String, Float>> posFormProbabilities = new ArrayList<NPair<String, Float>>();
+		HashMap<String, Float> toReturn = new HashMap<String, Float>();
+		Iterator<Map.Entry<String,PartOfSpeech>> it = lemmaOccurences.entrySet().iterator();
+		int index = 0;
+		int loopIndex = 0;
+		while (it.hasNext()) {
+			int totalAmount = 0;
+			NPair<String, Float> mostProbablePOS = new NPair<String, Float>("_", Float.MIN_VALUE);
+			Map.Entry<String, PartOfSpeech> formPair = (Map.Entry<String, PartOfSpeech>)it.next();
+			Iterator<Map.Entry<String, Integer>> iter = formPair.getValue().pposList.entrySet().iterator();
+			while(iter.hasNext()) {
+				Map.Entry<String, Integer> posPair = (Map.Entry<String, Integer>)iter.next();
+				totalAmount += posPair.getValue();
+				posFormProbabilities.add(new NPair<String, Float>(formPair.getKey() + " " + posPair.getKey(), (float)posPair.getValue()));
+				index++;
+			}
+			for(int i = loopIndex; i < index; i++) {
+				posFormProbabilities.set(i, new NPair<String, Float>(posFormProbabilities.get(i).e, posFormProbabilities.get(i).v / (float)totalAmount));
+				loopIndex++;
+//				if(posFormProbabilities.get(i).v > mostProbablePOS.v) {
+//					mostProbablePOS = posFormProbabilities.get(i);
+//				}
+				toReturn.put(posFormProbabilities.get(i).e, posFormProbabilities.get(i).v / (float)totalAmount);	
+			}
+		}
+		return toReturn;
+	}	
+	
+	
 }

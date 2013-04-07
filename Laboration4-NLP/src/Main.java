@@ -7,8 +7,10 @@ public class Main {
 		testParser.parse();
 		HashMap<String, PartOfSpeech> trainLemmaOccurrences = testParser.getLemmaOccurrences();
 		HashMap<String, PartOfSpeech> trainPosOccurrences = testParser.getPOSOccurrences();
-		HashMap<String, NPair<String, Float>> posBigrams = testParser.getPOSBigrams();
+		HashMap<String, NPair<String, Float>> posBigrams = testParser.getTransitionGraph();
 		HashMap<String, NPair<String, Float>> pwt = testParser.getPWT();
+		HashMap<String, NPair<String, Float>> formPosMap = testParser.getMostProbablePOSForForms();
+		HashMap<String, Float> emissionGraph = testParser.getEmissionGraph();
 		Evaluator testEvaluator = new Evaluator(trainPosOccurrences);
 		testEvaluator.computeConfusionMatrix("trainConfusionMatrix");
 		
@@ -33,5 +35,10 @@ public class Main {
 		Evaluator baselineEvaluator = new Evaluator(baselinePosOccurrences);
 		baselineEvaluator.evaluate();
 		baselineEvaluator.computeConfusionMatrix("baselineConfusionMatrix");
+		
+		HiddenMarkovModel hmm = new HiddenMarkovModel(posBigrams, pwt, formPosMap, emissionGraph);
+//		hmm.applyNoisyChannelMode("No, it was not black friday. I hate my life to the bitter end!");
+//		hmm.applyNoisyChannelModeOnFile("files/CoNLL2009-ST-English-development-pos.txt", 10);
+		hmm.viterbi("In an october 19");
 	}
 }
