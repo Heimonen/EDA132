@@ -128,18 +128,16 @@ public class HiddenMarkovModel {
 				probabilityMatrix[i][0] = previousMax;
 			}
 		}
-//		probabilityMatrix[posFormMap.size() - 1][0] = previousMax;
-		//LOOP
-		
 		for(int i = 1; i < words.length; i++) {
+			if(previousMax == Float.MIN_VALUE) {
+				previousMax = 1;
+			}
 			for(int j = 0; j < posFormMap.size(); j++) {
 				Float transition = posBigrams.get(posList.get(j)).v;
 				transition = transition != null ? transition : 0.0f;
 				Float emission = emissionGraph.get(words[i] + " " + posList.get(j));
 				emission = emission != null ? emission : 0.0f;
 				probabilityMatrix[j][i] = previousMax * transition * emission; 
-				posBigrams.get("sda"); //Transition matrix
-				
 			}
 			previousMax = Float.MIN_VALUE;
 			for(int k = 0; k < posFormMap.size(); k++) {
@@ -147,7 +145,6 @@ public class HiddenMarkovModel {
 					previousMax = probabilityMatrix[k][i];
 				}
 			}
-			//Compute previous max
 		}
 		//Get the path
 		String[] toReturn = new String[words.length];
@@ -169,6 +166,9 @@ public class HiddenMarkovModel {
 					index = i;
 				}
 				toReturn[j] = posList.get(index);
+				if(max == Float.MIN_VALUE) {
+					toReturn[j] = "_";
+				}
 			}
 		}
 		for(String s : matrix)
