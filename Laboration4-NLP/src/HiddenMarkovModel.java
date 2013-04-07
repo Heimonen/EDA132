@@ -110,7 +110,7 @@ public class HiddenMarkovModel {
 		return fileName;
 	}
 	
-	public void viterbi(String word) {
+	public String[] viterbi(String word) {
 		word = "START " + word.trim();
 		String[] words = word.split("\\s+");
 		float[][] probabilityMatrix = new float[posFormMap.size()][words.length];
@@ -171,33 +171,116 @@ public class HiddenMarkovModel {
 				}
 			}
 		}
-		for(String s : matrix)
-			System.out.println(s);
-		System.out.println();
-		for(String st : toReturn) {
-			System.out.print(st + "\t");
-		}		
+//		for(String s : matrix)
+//			System.out.println(s);
+//		System.out.println();
+//		for(String st : toReturn) {
+//			System.out.print(st + "\t");
+//		}		
+//		System.out.println();
+		return toReturn;
 	}
 	
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	private class Pair {
-		public String pos;
-		public Integer probability;
-		public Pair(String pos, Integer probability) {
-			this.pos = pos;
-			this.probability = probability;
+	public String viterbiEvaluateFile(String fileToTag) {
+		String fileName = "files/viterbiDevelopment-pos.txt";
+		DataInputStream in = null;
+		BufferedWriter out = null;
+		try {
+			FileWriter fOutStream = new FileWriter(fileName);
+			out = new BufferedWriter(fOutStream);
+			
+			FileInputStream fstream = new FileInputStream(fileToTag);
+			in = new DataInputStream(fstream);
+			BufferedReader br = new BufferedReader(new InputStreamReader(in));
+			String line;
+			String sentence = "";
+			ArrayList<String> words = new ArrayList<String>();
+			while((line = br.readLine()) != null) {
+				String[] data = line.split("\\s+");
+				if(data.length > 1) {
+					String temp = "";
+					for(int i = 0; i < data.length - 1; i++) {
+						temp += data[i] + '\t';
+					}
+					words.add(temp);
+					sentence += data[1] + " "; 		
+				} else {
+					String[] poses = viterbi(sentence);
+					String toWrite = "";
+					for(int i = 0; i < poses.length - 1; i++) {
+						toWrite += words.get(i) + poses[i + 1] + '\n';
+					}
+					out.write(toWrite);
+					words.clear();
+					sentence = "";
+				}
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(in != null){
+					in.close();
+				}
+				if(out != null) {
+					out.close();
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
+		return fileName;
 	}
-
+	
+	
+	
+	public String viterbiTestSet() {
+		String fileName = "files/viterbiTest-pos.txt";
+		DataInputStream in = null;
+		BufferedWriter out = null;
+		try {
+			FileWriter fOutStream = new FileWriter(fileName);
+			out = new BufferedWriter(fOutStream);
+			
+			FileInputStream fstream = new FileInputStream("files/CoNLL2009-ST-test-words.txt");
+			in = new DataInputStream(fstream);
+			BufferedReader br = new BufferedReader(new InputStreamReader(in));
+			String line;
+			String sentence = "";
+			ArrayList<String> words = new ArrayList<String>();
+			while((line = br.readLine()) != null) {
+				String[] data = line.split("\\s+");
+				if(data.length > 1) {
+					words.add(line + '\t');
+					sentence += data[1] + " "; 		
+				} else {
+					String[] poses = viterbi(sentence);
+					String toWrite = "";
+					for(int i = 0; i < poses.length - 1; i++) {
+						toWrite += words.get(i) + poses[i + 1] + '\n';
+					}
+					out.write(toWrite);
+					words.clear();
+					sentence = "";
+				}
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(in != null){
+					in.close();
+				}
+				if(out != null) {
+					out.close();
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		return fileName;
+	}
 }
 
 
