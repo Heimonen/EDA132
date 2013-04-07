@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -110,7 +111,7 @@ public class HiddenMarkovModel {
 	}
 	
 	public void viterbi(String word) {
-//		word = "START " + word.trim();
+		word = "START " + word.trim();
 		String[] words = word.split("\\s+");
 		float[][] probabilityMatrix = new float[posFormMap.size()][words.length];
 		//Initialization
@@ -148,15 +149,34 @@ public class HiddenMarkovModel {
 			}
 			//Compute previous max
 		}
-		for(int i = 0; i < posFormMap.size(); i++) {
-			for(int j = 0; j < words.length; j++) {
-				System.out.print(probabilityMatrix[i][j] + "\t\t\t\t");
-			}
-			System.out.println();
+		//Get the path
+		String[] toReturn = new String[words.length];
+		String[] matrix = new String[posFormMap.size() + 1];
+		matrix[0] = "\t";
+		for(int y = 0; y < words.length; y++) {
+			matrix[0] += words[y] + "\t";
 		}
-		
-		System.out.println(posBigrams.get("START").e + " " + posBigrams.get("START").v);
-		
+		for(int x = 1; x < matrix.length; x++) {
+			matrix[x] = posList.get(x - 1) + "\t";
+		}
+		for(int j = 0; j < words.length; j++) {
+			float max = Float.MIN_VALUE;
+			int index = 0;
+			for(int i = 0; i < posFormMap.size(); i++) {
+				matrix[i + 1] += probabilityMatrix[i][j] + "\t";
+				if(probabilityMatrix[i][j] > max) {
+					max = probabilityMatrix[i][j];
+					index = i;
+				}
+				toReturn[j] = posList.get(index);
+			}
+		}
+		for(String s : matrix)
+			System.out.println(s);
+		System.out.println();
+		for(String st : toReturn) {
+			System.out.print(st + "\t");
+		}		
 	}
 	
 	

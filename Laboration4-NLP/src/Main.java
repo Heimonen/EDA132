@@ -39,6 +39,6 @@ public class Main {
 		HiddenMarkovModel hmm = new HiddenMarkovModel(posBigrams, pwt, formPosMap, emissionGraph);
 //		hmm.applyNoisyChannelMode("No, it was not black friday. I hate my life to the bitter end!");
 //		hmm.applyNoisyChannelModeOnFile("files/CoNLL2009-ST-English-development-pos.txt", 10);
-		hmm.viterbi("In an october 19");
+		hmm.viterbi("in an october 19");
 	}
 }
