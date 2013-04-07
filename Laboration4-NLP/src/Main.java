@@ -7,9 +7,10 @@ public class Main {
 		testParser.parse();
 		HashMap<String, PartOfSpeech> trainLemmaOccurrences = testParser.getLemmaOccurrences();
 		HashMap<String, PartOfSpeech> trainPosOccurrences = testParser.getPOSOccurrences();
-		HashMap<String, Integer> posBigrams = testParser.getPOSBigrams();
+		HashMap<String, NPair<String, Float>> posBigrams = testParser.getPOSBigrams();
+		HashMap<String, NPair<String, Float>> pwt = testParser.getPWT();
 		Evaluator testEvaluator = new Evaluator(trainPosOccurrences);
-		testEvaluator.computeConfusionMatrix("testConfusionMatrix");
+		testEvaluator.computeConfusionMatrix("trainConfusionMatrix");
 		
 		System.out.println("Evaluation program: 2\n");
 		Parser developmentParser = new Parser("files/CoNLL2009-ST-English-development-pos.txt");

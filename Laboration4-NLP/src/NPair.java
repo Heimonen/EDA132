@@ -1,12 +1,10 @@
-public class NPair<E, V, S> {
+public class NPair<E, V> {
 
 	public E e;
 	public V v;
-	public S s;
 	
-	public NPair(E e, V v, S s) {
+	public NPair(E e, V v) {
 		this.e = e;
 		this.v = v;
-		this.s = s;
 	}
 }
