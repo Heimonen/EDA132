@@ -63,7 +63,7 @@ public class HiddenMarkovModel {
 					for(int i = 0; i < data.length - 1; i++) {
 						toWrite += data[i] + '\t';
 					}
-					String ppos = "lol";//applyNoisyChannelMode(data[1]);
+					String ppos = "";//applyNoisyChannelMode(data[1]); tag replaces the old noisyChannelMode...
 					if(ppos != null)
 						toWrite += ppos;
 					else
@@ -89,9 +89,9 @@ public class HiddenMarkovModel {
 		return fileName;
 	}
 	
-	public String[] viterbi(String word) {
-		word = "START " + word.trim();
-		String[] words = word.split("\\s+");
+	public String[] viterbi(String[] words) {
+//		word = "START " + word.trim();
+//		String[] words = word.split("\\s+");
 		float[][] probabilityMatrix = new float[posFormMap.size()][words.length];
 		//Initialization
 		float previousMax = 1.0f;
@@ -165,10 +165,10 @@ public class HiddenMarkovModel {
 	}
 	
 	public ArrayList<NPair<String, Float>> tag(ArrayList<String> input) {
-		return tag(input, 0, "START").asList();
+		return noisyTag(input, 0, "START").asList();
 	}
 	 
-	private NPair<String, Float> tag(ArrayList<String> input, int depth, String previous) {
+	private NPair<String, Float> noisyTag(ArrayList<String> input, int depth, String previous) {
 		float bestRes = -1;
 		NPair<String, Float> bestState = null;
 		
@@ -181,7 +181,7 @@ public class HiddenMarkovModel {
 			Float posGivenPos = posPlusPosProbability.get(previous + " " + posConsidered);
 			posGivenPos = posGivenPos != null ? posGivenPos : 0f;
 			if(depth < input.size() - 1) {
-				NPair<String, Float> nextState = tag(input, depth + 1, posConsidered);
+				NPair<String, Float> nextState = noisyTag(input, depth + 1, posConsidered);
 				if(nextState.v * wordGivenPos * posGivenPos > bestRes) {
 					bestRes = nextState.v * wordGivenPos * posGivenPos;
 					bestState = new NPair<String, Float>(posConsidered, bestRes, nextState);
@@ -198,7 +198,7 @@ public class HiddenMarkovModel {
 	
 	public List<String> viterbiTag(List<String> input) {
 		State[][] states = new State[2][posList.size()];
-		states[0][posList.indexOf("START")] = new State(1f, "START"); //This might cause an error
+		states[0][posList.indexOf("START")] = new State(1f, "START"); 
 		
 		for(int i = 1; i < input.size(); i++) {
 			states[i % 2] = new State[posList.size()];
@@ -206,11 +206,11 @@ public class HiddenMarkovModel {
 				if(states[(i + 1) % 2][previousTag] != null) {
 					for (String currentTag : posAssociatedWithPosList.get(posList.get(previousTag))) {
 						Float wordGivenPos = emissionGraph.get(input.get(i) + " " + currentTag);
-						wordGivenPos = wordGivenPos != null ? wordGivenPos : 0f;	//WE MIGHT HAVE TO REMOVE THIS
+						wordGivenPos = wordGivenPos != null ? wordGivenPos : 0f;	
 						if(!formPosMap.containsKey(input.get(i))) {
 							wordGivenPos = 0f;
 						}
-						Float posGivenPos = posPlusPosProbability.get(posList.get(previousTag) + " " + currentTag); //Might be in reversed order, but probably not
+						Float posGivenPos = posPlusPosProbability.get(posList.get(previousTag) + " " + currentTag);
 //						posGivenPos = posGivenPos != null ? posGivenPos : 0f;
 						int newIndex = posList.indexOf(currentTag);
 						
@@ -319,11 +319,16 @@ public class HiddenMarkovModel {
 					sentence += data[1] + " "; 		
 				} else {
 					sentence = "START " + sentence;
-					List<String> toTag = Arrays.asList(sentence.split(" "));
-					List<String> poses = viterbiTag(toTag);
+//					List<String> toTag = Arrays.asList(sentence.split(" "));
+//					List<String> poses = viterbiTag(toTag);
+//					String toWrite = "";
+//					for(int i = 0; i < poses.size() - 1; i++) {
+//						toWrite += words.get(i) + poses.get(i + 1) + '\n';
+//					}
+					String[] poses = viterbi(sentence.split(" "));
 					String toWrite = "";
-					for(int i = 0; i < poses.size() - 1; i++) {
-						toWrite += words.get(i) + poses.get(i + 1) + '\n';
+					for(int i = 0; i < poses.length - 1; i++) {
+						toWrite += words.get(i) + poses[i + 1] + '\n';
 					}
 					out.write(toWrite);
 					words.clear();
@@ -369,7 +374,7 @@ public class HiddenMarkovModel {
 					words.add(line + '\t');
 					sentence += data[1] + " "; 		
 				} else {
-					String[] poses = viterbi(sentence);
+					String[] poses = viterbi(sentence.split(" "));
 					String toWrite = "";
 					for(int i = 0; i < poses.length - 1; i++) {
 						toWrite += words.get(i) + poses[i + 1] + '\n';

@@ -8,6 +8,7 @@ public class Main {
 		Parser testParser = new Parser("files/CoNLL2009-ST-English-train-pos.txt");
 		testParser.parse();
 		HashMap<String, PartOfSpeech> trainLemmaOccurrences = testParser.getLemmaOccurrences();
+		PartOfSpeech pa = trainLemmaOccurrences.get("a");
 		HashMap<String, PartOfSpeech> trainPosOccurrences = testParser.getPOSOccurrences();
 		HashMap<String, NPair<String, Float>> posBigrams = testParser.getTransitionGraph();
 		HashMap<String, NPair<String, Float>> pwt = testParser.getPWT();
@@ -35,6 +36,7 @@ public class Main {
 		baselineParser.parse();
 		HashMap<String, PartOfSpeech> baselinePosOccurrences = baselineParser.getPOSOccurrences();
 		Evaluator baselineEvaluator = new Evaluator(baselinePosOccurrences);
+		System.out.println("Baseline evaluate");
 		baselineEvaluator.evaluate();
 		baselineEvaluator.computeConfusionMatrix("baselineConfusionMatrix");
 		HashMap<String, ArrayList<String>> posAssociatedWithPosesList = testParser.getListOfPosAssociatedWithPos();
@@ -47,7 +49,7 @@ public class Main {
 //		noisy.add("in");
 //		noisy.add("Windy");
 //		noisy.add("City");
-		System.out.println();
+		System.out.println("Noisy test");
 		ArrayList<NPair<String, Float>> noisyResult = hmm.tag(noisy);
 		for(int i = 0; i < noisy.size(); i++) {
 			System.out.println(noisy.get(i) + "\t" + noisyResult.get(i).e + "\t" + noisyResult.get(i).v);
@@ -94,6 +96,6 @@ public class Main {
 		Evaluator viterbiEvaluator = new Evaluator(viterbiPosOccurrences);
 		System.out.println("POS tagger using hidden Markov models: 6\n");
 		viterbiEvaluator.evaluate();
-//		hmm.viterbiTestSet();
+		hmm.viterbiTestSet();
 	}
 }

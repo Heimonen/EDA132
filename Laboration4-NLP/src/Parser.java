@@ -38,11 +38,18 @@ public class Parser {
 	public void parse() {
 		String strLine;
 		try {
-			processLine("0 START START START START START");
+			String startLine = "0 START START START START START";
+			processLine(startLine.split("\\s+"));
 			while ((strLine = br.readLine()) != null)   {
-				processLine(strLine);
+				String[] line = strLine.split("\\s+");
+				processLine(line);
+				if(line.length > 4) {
+					line[1] = line[2];
+					line[4] = line[5];
+					processLine(line);
+				}
 				if(strLine.length() > 0 && strLine.split("\\s+")[1].equals(".")) {
-					processLine("0 START START START START START");
+					processLine(startLine.split("\\s+"));
 				}
 			}
 		} catch (IOException e) {
@@ -58,8 +65,7 @@ public class Parser {
 		}
 	}
 
-	private void processLine(String line) {
-		String[] data = line.split("\\s+");
+	private void processLine(String[] data) {		
 		if(data.length > 1) {
 			//LEMMA and word frequency
 			//partOfSpeech.occurrences = word frequency
@@ -84,16 +90,15 @@ public class Parser {
 			}			
 			//POS BIGRAMS
 			if(previous == null) previous = "START";
-//			else if(previous.equals('.')) {
-//				previous = "START";
-//			}
 			HashMap<String, Integer> posBigramOccurred = posBigrams.get(previous);
 			if(posBigramOccurred != null) {
 				Integer posOccurrences = posBigramOccurred.get(data[4]);
 				if(posOccurrences != null) {
 					posBigramOccurred.put(data[4], posOccurrences + 1);
+					posBigrams.put(previous, posBigramOccurred);
 				} else {
 					posBigramOccurred.put(data[4], 1);
+					posBigrams.put(previous, posBigramOccurred);
 				}
 			} else {
 				HashMap<String, Integer> posMap = new HashMap<String, Integer>();
@@ -248,7 +253,7 @@ public class Parser {
 //				if(posFormProbabilities.get(i).v > mostProbablePOS.v) {
 //					mostProbablePOS = posFormProbabilities.get(i);
 //				}
-				toReturn.put(posFormProbabilities.get(i).e, posFormProbabilities.get(i).v / (float)totalAmount);	
+				toReturn.put(posFormProbabilities.get(i).e, posFormProbabilities.get(i).v);	
 			}
 		}
 		return toReturn;
