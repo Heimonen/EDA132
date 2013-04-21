@@ -8,57 +8,36 @@ import java.io.InputStreamReader;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 
 public class HiddenMarkovModel {
 	
 	private HashMap<String, NPair<String, Float>> posBigrams, posFormMap, formPosMap;
-	private HashMap<String, Float> emissionGraph;
-	public HiddenMarkovModel(HashMap<String, NPair<String, Float>> posBigrams, HashMap<String, NPair<String, Float>> posFormMap, HashMap<String, NPair<String, Float>> formPosMap, HashMap<String, Float> emissionGraph) {
+	private HashMap<String, Float> emissionGraph, posPlusPosProbability;
+	private ArrayList<String> posList;
+	private HashMap<String, ArrayList<String>> posAssociatedWithPosList;
+	public HiddenMarkovModel(HashMap<String, NPair<String, Float>> posBigrams, HashMap<String, NPair<String, Float>> posFormMap, HashMap<String, NPair<String, Float>> formPosMap, HashMap<String, Float> emissionGraph, HashMap<String, Float> posPlusPosProbability, HashMap<String, ArrayList<String>> posAssociatedWithPosList) {
 		this.posBigrams = posBigrams;
 		this.posFormMap = posFormMap;
 		this.formPosMap = formPosMap;
 		this.emissionGraph = emissionGraph;
-	}
-	
-	
-	public String applyNoisyChannelMode(String in) {
-		String toReturn = "";
-		System.out.println();
-		int i = 0;
-		String[] words = in.split("\\s+");
-		NPair<String, Float> previous = null;
-		NPair<String, Float> posPair = null;
-		for(String s : words) {
-			i++;
-			NPair<String, Float> formPair = formPosMap.get(s.trim());
-			if(previous != null) {
-				posPair = posBigrams.get(previous.e);
-			}
-			if(formPair != null && posPair != null ) {
-				NPair<String, Float> winner = formPair.v > posPair.v ? formPair : posPair;
-				previous = winner;
-				produceOutput(winner, i, s);
-				toReturn = previous.e;
-			} else if(formPair != null && posPair == null) {
-				previous = formPair;
-				produceOutput(formPair, i, s);
-				toReturn = previous.e;
-			} else if(posPair != null && formPair == null) {
-				previous = posPair;
-				produceOutput(posPair, i, s);
-				toReturn = previous.e;
-			} else {
-				previous = null;
-				produceOutput(new NPair<String, Float>("_", 0f), i, s);
-				toReturn = "_";
-			}	
+		this.posPlusPosProbability = posPlusPosProbability;
+		this.posAssociatedWithPosList = posAssociatedWithPosList;
+		Iterator<Map.Entry<String, NPair<String, Float>>> it = posFormMap.entrySet().iterator();
+		posList = new ArrayList<String>();
+		while (it.hasNext()) {
+			Map.Entry<String, NPair<String, Float>> pair = (Map.Entry<String, NPair<String, Float>>)it.next();
+			posList.add(pair.getKey());
 		}
-		return toReturn;
 	}
+	
+	
 	
 	private void produceOutput(NPair<String, Float> in, int i, String word) {
 		DecimalFormat f = new DecimalFormat("##.##");
@@ -84,7 +63,7 @@ public class HiddenMarkovModel {
 					for(int i = 0; i < data.length - 1; i++) {
 						toWrite += data[i] + '\t';
 					}
-					String ppos = applyNoisyChannelMode(data[1]);
+					String ppos = "lol";//applyNoisyChannelMode(data[1]);
 					if(ppos != null)
 						toWrite += ppos;
 					else
@@ -116,6 +95,7 @@ public class HiddenMarkovModel {
 		float[][] probabilityMatrix = new float[posFormMap.size()][words.length];
 		//Initialization
 		float previousMax = 1.0f;
+		String previous = "";
 		Iterator<Map.Entry<String, NPair<String, Float>>> it = posFormMap.entrySet().iterator();
 		ArrayList<String> posList = new ArrayList<String>();
 		while (it.hasNext()) {
@@ -126,6 +106,7 @@ public class HiddenMarkovModel {
 			probabilityMatrix[i][0] = 0;
 			if(posList.get(i).equals("START")){
 				probabilityMatrix[i][0] = previousMax;
+				previous = "START";
 			}
 		}
 		for(int i = 1; i < words.length; i++) {
@@ -133,6 +114,7 @@ public class HiddenMarkovModel {
 				previousMax = 1;
 			}
 			for(int j = 0; j < posFormMap.size(); j++) {
+//				Float transition = posPlusPosProbability.get(previous + " " + posList.get(j));
 				Float transition = posBigrams.get(posList.get(j)).v;
 				transition = transition != null ? transition : 0.0f;
 				Float emission = emissionGraph.get(words[i] + " " + posList.get(j));
@@ -143,6 +125,7 @@ public class HiddenMarkovModel {
 			for(int k = 0; k < posFormMap.size(); k++) {
 				if(probabilityMatrix[k][i] > previousMax) {
 					previousMax = probabilityMatrix[k][i];
+					previous = posList.get(k);
 				}
 			}
 		}
@@ -181,6 +164,135 @@ public class HiddenMarkovModel {
 		return toReturn;
 	}
 	
+	public ArrayList<NPair<String, Float>> tag(ArrayList<String> input) {
+		return tag(input, 0, "START").asList();
+	}
+	 
+	private NPair<String, Float> tag(ArrayList<String> input, int depth, String previous) {
+		float bestRes = -1;
+		NPair<String, Float> bestState = null;
+		
+		for(String posConsidered : posList) {
+			Float wordGivenPos = emissionGraph.get(input.get(depth) + " " + posConsidered);
+			wordGivenPos = wordGivenPos != null ? wordGivenPos : 0f;
+			if(!formPosMap.containsKey(input.get(depth))) {
+				wordGivenPos = 0f;
+			}
+			Float posGivenPos = posPlusPosProbability.get(previous + " " + posConsidered);
+			posGivenPos = posGivenPos != null ? posGivenPos : 0f;
+			if(depth < input.size() - 1) {
+				NPair<String, Float> nextState = tag(input, depth + 1, posConsidered);
+				if(nextState.v * wordGivenPos * posGivenPos > bestRes) {
+					bestRes = nextState.v * wordGivenPos * posGivenPos;
+					bestState = new NPair<String, Float>(posConsidered, bestRes, nextState);
+				}
+			} else {
+				if(wordGivenPos * posGivenPos > bestRes) {
+					bestRes = wordGivenPos * posGivenPos;
+					bestState = new NPair<String, Float>(posConsidered, bestRes);
+				}
+			}
+		}
+		return bestState;
+	}
+	
+	public List<String> viterbiTag(List<String> input) {
+		State[][] states = new State[2][posList.size()];
+		states[0][posList.indexOf("START")] = new State(1f, "START"); //This might cause an error
+		
+		for(int i = 1; i < input.size(); i++) {
+			states[i % 2] = new State[posList.size()];
+			for(int previousTag = 0; previousTag < posList.size(); previousTag++) {
+				if(states[(i + 1) % 2][previousTag] != null) {
+					for (String currentTag : posAssociatedWithPosList.get(posList.get(previousTag))) {
+						Float wordGivenPos = emissionGraph.get(input.get(i) + " " + currentTag);
+						wordGivenPos = wordGivenPos != null ? wordGivenPos : 0f;	//WE MIGHT HAVE TO REMOVE THIS
+						if(!formPosMap.containsKey(input.get(i))) {
+							wordGivenPos = 0f;
+						}
+						Float posGivenPos = posPlusPosProbability.get(posList.get(previousTag) + " " + currentTag); //Might be in reversed order, but probably not
+//						posGivenPos = posGivenPos != null ? posGivenPos : 0f;
+						int newIndex = posList.indexOf(currentTag);
+						
+						if(states[i % 2][newIndex] == null && posGivenPos * wordGivenPos > 0) {
+							states[i % 2][newIndex] = new State(states[(i + 1) % 2][previousTag].probability * posGivenPos * wordGivenPos, states[(i + 1) % 2][previousTag], currentTag);
+						} else if(states[i % 2][newIndex] != null) {
+							if(states[(i + 1) % 2][previousTag].probability * posGivenPos * wordGivenPos > states[i % 2][newIndex].probability) {
+								states[i % 2][newIndex] = new State(states[(i + 1) % 2][previousTag].probability * posGivenPos * wordGivenPos, states[(i + 1) % 2][previousTag],currentTag);
+							}
+						}
+					}
+				}
+			}
+			boolean allCurrentNull = true;
+			for(int k = 0; k < posList.size(); k++) {
+				if(states[i % 2][k] != null) {
+					allCurrentNull = false;
+					break;
+				}
+			}
+			if(allCurrentNull) {
+				State bestState = null;
+				float bestStat = -1;
+				
+				for(int k = 0; k < posList.size(); k++) {
+					if(states[(i + 1) % 2][k] != null) {
+						if(states[(i + 1) % 2][k].probability > bestStat) {
+							bestState = states[(i + 1) % 2][k];
+							bestStat = bestState.probability;
+						} else if(states[(i + 1) % 2][k].probability == bestStat) {
+							//Do something
+							System.out.println("probability equal");
+						}
+						break;
+					}
+				}
+				for(int k = 0; k < posList.size(); k++) {
+					states[i % 2][k] = new State(1, bestState, posList.get(k)); 
+				}
+			}
+		}
+		float bestResult = -1;
+		State bestState = null;
+		for (int i = 0; i < posList.size(); i++) {
+			if (states[(input.size() - 1) % 2][i] != null) {
+				if (states[(input.size() - 1) % 2][i].probability > bestResult) {
+					bestState = states[(input.size() - 1) % 2][i];
+					bestResult = bestState.probability;
+				}
+			}
+		}
+		
+		return bestState.asListReversed();
+	}
+	
+	
+	class State {
+		float probability;
+		State previous = null;
+		String t;
+		public State(float probability, State previous, String t) {
+			this(probability, t);
+			this.previous = previous;
+		}
+		public State(float probability, String t) {
+			this.t = t;
+			this.probability = probability;
+		}
+		public List<String> asListReversed() {
+			LinkedList<String> tempRes = new LinkedList<String>();
+			this.addToList(tempRes);
+			Collections.reverse(tempRes);
+			return tempRes;
+		}
+		private void addToList(List<String> tags) {
+			tags.add(this.t);
+			if (previous != null)
+				previous.addToList(tags);
+		}
+	}
+	
+	
 	
 	public String viterbiEvaluateFile(String fileToTag) {
 		String fileName = "files/viterbiDevelopment-pos.txt";
@@ -206,10 +318,12 @@ public class HiddenMarkovModel {
 					words.add(temp);
 					sentence += data[1] + " "; 		
 				} else {
-					String[] poses = viterbi(sentence);
+					sentence = "START " + sentence;
+					List<String> toTag = Arrays.asList(sentence.split(" "));
+					List<String> poses = viterbiTag(toTag);
 					String toWrite = "";
-					for(int i = 0; i < poses.length - 1; i++) {
-						toWrite += words.get(i) + poses[i + 1] + '\n';
+					for(int i = 0; i < poses.size() - 1; i++) {
+						toWrite += words.get(i) + poses.get(i + 1) + '\n';
 					}
 					out.write(toWrite);
 					words.clear();

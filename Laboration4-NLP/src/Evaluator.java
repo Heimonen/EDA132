@@ -17,6 +17,7 @@ public class Evaluator {
 
 	public void evaluate() {
 		Iterator<Map.Entry<String, PartOfSpeech>> it = posMap.entrySet().iterator();
+		Float sum = 0f;
 		while (it.hasNext()) {
 			Map.Entry<String, PartOfSpeech> pair = (Map.Entry<String, PartOfSpeech>)it.next();
 			Integer pos = pair.getValue().occurrences;
@@ -27,8 +28,11 @@ public class Evaluator {
 			if(ppos == null) {
 				ppos = 0;
 			}
-			System.out.println(pair.getKey() + "\t " + ((float)ppos / (float)pos) * 100 + '%');
+			float acc = ((float)ppos / (float)pos) * 100;
+			System.out.println(pair.getKey() + "\t " + acc + '%');
+			sum += acc;
 		}
+		System.out.println("\nAccuracy: " + (sum / ((float)posMap.size() * 100f)) * 100f + "%");
 	}
 
 	public void computeConfusionMatrix(String fileName) {

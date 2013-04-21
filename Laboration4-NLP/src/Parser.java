@@ -64,7 +64,7 @@ public class Parser {
 			//LEMMA and word frequency
 			//partOfSpeech.occurrences = word frequency
 			//partOfSpeech.pposList = <pos, frequency>
-			data[1] = data[1].toLowerCase();
+//			data[1] = data[1].toLowerCase();
 			PartOfSpeech lemmaOccurred =  lemmaOccurences.get(data[1]);
 			if(lemmaOccurred != null) {
 				lemmaOccurred.occurrences++;
@@ -78,6 +78,7 @@ public class Parser {
 			if(posOccurred != null) {
 				posOccurred.occurrences++;
 				posOccurred.putPPOS(data[5]);
+				posOccurences.put(data[4], posOccurred);
 			} else {
 				posOccurences.put(data[4], new PartOfSpeech(data[4], data[5]));
 			}			
@@ -253,5 +254,55 @@ public class Parser {
 		return toReturn;
 	}	
 	
+	
+	/**
+	 * 
+	 * 
+	 * @return
+	 */
+	public HashMap<String, Float> getProbabilityForPosPlusPos() {
+		ArrayList<NPair<String, Float>> posBigramProbabilities = new ArrayList<NPair<String, Float>>();
+		HashMap<String, Float> toReturn = new HashMap<String, Float>();
+		Iterator<Map.Entry<String, HashMap<String, Integer>>> it = posBigrams.entrySet().iterator();
+		int index = 0;
+		int loopIndex = 0;
+		while (it.hasNext()) {
+			NPair<String, Float> mostProbablePOS = new NPair<String, Float>("_", Float.MIN_VALUE);
+			int totalAmount = 0;
+			Map.Entry<String, HashMap<String, Integer>> prePair = (Map.Entry<String, HashMap<String, Integer>>)it.next();
+			Iterator<Map.Entry<String,Integer>> currentIt = prePair.getValue().entrySet().iterator();
+			while(currentIt.hasNext()) {
+				Map.Entry<String, Integer> currentPair = (Map.Entry<String, Integer>)currentIt.next();
+				totalAmount += currentPair.getValue();
+				posBigramProbabilities.add(new NPair<String, Float>(prePair.getKey() + " " + currentPair.getKey(), (float)currentPair.getValue()));
+				index++;
+			}
+			for(int i = loopIndex; i < index; i++) {
+				posBigramProbabilities.set(i, new NPair<String, Float>(posBigramProbabilities.get(i).e, posBigramProbabilities.get(i).v / (float)totalAmount));
+				loopIndex++;
+//				if(posBigramProbabilities.get(i).v > mostProbablePOS.v) {
+//					mostProbablePOS = posBigramProbabilities.get(i);
+//				}
+				toReturn.put(posBigramProbabilities.get(i).e, posBigramProbabilities.get(i).v);		
+			}
+		}
+		return toReturn;
+	}
+	
+	public HashMap<String, ArrayList<String>> getListOfPosAssociatedWithPos() {
+		HashMap<String, ArrayList<String>> toReturn = new HashMap<String, ArrayList<String>>();
+		Iterator<Map.Entry<String, HashMap<String, Integer>>> it = posBigrams.entrySet().iterator();
+		while (it.hasNext()) {
+			Map.Entry<String, HashMap<String, Integer>> prePair = (Map.Entry<String, HashMap<String, Integer>>)it.next();
+			Iterator<Map.Entry<String,Integer>> currentIt = prePair.getValue().entrySet().iterator();
+			ArrayList<String> toAdd = new ArrayList<String>();
+			while(currentIt.hasNext()) {
+				Map.Entry<String, Integer> currentPair = (Map.Entry<String, Integer>)currentIt.next();
+				toAdd.add(currentPair.getKey());
+			}
+			toReturn.put(prePair.getKey(), toAdd);
+		}
+		return toReturn;
+	}
 	
 }
