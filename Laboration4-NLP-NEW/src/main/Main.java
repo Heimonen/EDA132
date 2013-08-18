@@ -1,5 +1,6 @@
 package main;
 
+import java.util.HashMap;
 import java.util.Map.Entry;
 
 public class Main {
@@ -31,7 +32,21 @@ public class Main {
 		//ass2
 		PosConfusionMatrixParser asd = new PosConfusionMatrixParser("input/CoNLL2009-ST-English-train-pos.txt");
 		asd.parse();
+		//ass 3
 		asd.getMatrix();
+		
+		//Baseline tagger
+		//ass 1
+		FormPosParser fpp = new FormPosParser("input/CoNLL2009-ST-English-train-pos.txt");
+		HashMap<String, String> baselineMap =  fpp.getBaselineTaggerMap();
+		//ass 2
+		BaselineTagger bt = new BaselineTagger("input/CoNLL2009-ST-English-development-pos.txt", baselineMap);
+		bt.parse();
+		//ass 3
+		PerWordEvalParser pwepBaseline = new PerWordEvalParser("output/baselinetagger_result.txt");
+		pwepBaseline.parse();
+		pwepBaseline.getAcc();
+		
+		//POS tagger using hidden Markov models
 	}
-
 }
