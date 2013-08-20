@@ -54,9 +54,9 @@ public class ViterbiAlgo {
 						BiGram pospos = new BiGram(POSes[qq], POSes[j]);
 						Double prob1 = posposProb.get(pospos);
 						if(prob1 == null) {
-							prob1 = 0.001;
+							prob1 = 0.00001;
 						} else {
-							prob1 *= 10000;
+							prob1 *= 1000;
 						}
 
 						double prob =  prob1 * matrix[i-1][qq].value;
@@ -70,9 +70,9 @@ public class ViterbiAlgo {
 					BiGram formpos = new BiGram(POSes[j], sentence[i]);
 					Double prob2 = formposProb.get(formpos);
 					if( prob2 == null) {
-						prob2 =0.001;
+						prob2 =0.00001;
 					}else {
-						prob2 *= 10000;
+						prob2 *= 1000;
 					}
 					if(bestNode.value * prob2 > 0){
 						matrix[i][j] = bestNode;
