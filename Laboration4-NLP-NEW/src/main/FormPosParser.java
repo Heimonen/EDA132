@@ -31,7 +31,6 @@ public class FormPosParser {
 				} catch( ArrayIndexOutOfBoundsException e) {
 					continue;
 				}
-				ConfusionColumn.approvedPos.add(form);
 				HashMap<String, Integer> column = matrix.get(form);
 				if( column == null) {
 					column = new HashMap<String, Integer>();

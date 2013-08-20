@@ -12,7 +12,7 @@ public class ConfusionColumn {
 //	                                            "WDT", "VBZ", "WP", "IN", "NIL", "EX", "VBG", "POS", "VBD", "UH", "PRP$",
 //	                                            "NNS", "CC", "CD", "NNP", "WRB", "#", "$", ".", ",", ":", "(", ")", "\"", 
 //	                                            "'", "‘", "’", "“", "”"};
-	public static ArrayList<String> approvedAL;
+//	public static ArrayList<String> approvedAL;
 	
 	static{
 		approvedPos = new HashSet<String>();
