@@ -110,7 +110,7 @@ public class ViterbiAlgo {
 		return toReturn;
 	}
 
-	public void predictPosOnDevelopmentSet(String contentPath, HashMap<BiGram, Double> posposProb, HashMap<BiGram, Double> formposProb) {
+	public void predictPosOnDevelopmentSet(String contentPath, HashMap<BiGram, Double> posposProb, HashMap<BiGram, Double> formposProb, String output) {
 		try {
 			String[] poses = new String[ConfusionColumn.approvedPos.size()+1];
 			int asdasdasdi = 0;
@@ -118,7 +118,7 @@ public class ViterbiAlgo {
 			for(String s: ConfusionColumn.approvedPos) {
 				poses[asdasdasdi++] = s;
 			}
-			BufferedWriter out = new BufferedWriter(new FileWriter("output/viterbi_result.txt"));
+			BufferedWriter out = new BufferedWriter(new FileWriter(output));
 			BufferedReader in = new BufferedReader(new FileReader(contentPath));
 			String line;
 			ArrayList<String> sentenceData = new ArrayList<String>();

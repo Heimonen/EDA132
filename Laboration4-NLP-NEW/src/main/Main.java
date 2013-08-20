@@ -66,11 +66,15 @@ public class Main {
 		String[] nsentence = {"BOS", "Housing", "starts", "are", "expected", "to", "quicken", "a", "bit", "from", "August", "'s", "annual", "pace", "of", "1,350,000", "units", "."};
 		ViterbiAlgo vaa = new ViterbiAlgo(nsentence, poses, hmme.posposProb, hmme.formposProb);
 		vaa.run();
-		
-		va.predictPosOnDevelopmentSet("input/CoNLL2009-ST-English-development-pos.txt", hmme.posposProb, hmme.formposProb);
+		//development set
+		va.predictPosOnDevelopmentSet("input/CoNLL2009-ST-English-development-pos.txt", hmme.posposProb, hmme.formposProb, "output/viterbi_result.txt");
 		PerWordEvalParser pwepViterbi = new PerWordEvalParser("output/viterbi_result.txt");
 		pwepViterbi.parse();
 		pwepViterbi.getAcc();
-		
+		//test set
+		va.predictPosOnDevelopmentSet("input/CoNLL2009-ST-English-train-pos.txt", hmme.posposProb, hmme.formposProb, "output/viterbi_test_result.txt");
+		PerWordEvalParser pweiterbi = new PerWordEvalParser("output/viterbi_test_result.txt");
+		pweiterbi.parse();
+		pweiterbi.getAcc();
 	}
 }
